@@ -18,12 +18,16 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 import com.example.portable_web_ide.ui.main.*;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String APP_TAG = "Portable_web_ide";
+    private SectionsPagerAdapter sectionsPagerAdapter;
+    private ViewPager viewPager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +36,14 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
+        sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+
+
+
 
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -69,8 +76,10 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this,SettingsActivity.class);
             startActivity(intent);
         }
-        if(id == android.R.id.home){
-
+        if(id == R.id.action_open_file){
+            Log.i(APP_TAG, "Нажата кнопка Открыть файл");
+            sectionsPagerAdapter.newTab();
+            viewPager.setAdapter(sectionsPagerAdapter);
         }
 
         return super.onOptionsItemSelected(item);
