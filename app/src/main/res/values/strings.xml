@@ -2,6 +2,7 @@
     <string name="app_name">Portable_web_ide</string>
     <string name="action_settings">Настройки</string>
     <string name="action_open_file">Открыть файл</string>
+    <string name="action_save_file">Сохранить файл</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
