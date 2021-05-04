@@ -1,5 +1,6 @@
 package com.example.portable_web_ide.ui.main;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,16 +14,24 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.portable_web_ide.MainActivity;
 import com.example.portable_web_ide.R;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -30,44 +39,50 @@ import java.io.OutputStreamWriter;
 public class PlaceholderFragment extends Fragment {
 
     private View root;
-    public String fileName;
-    private static PlaceholderFragment currentFragment;
-    private static final String ARG_SECTION_NUMBER = "section_number";
-    private static final String APP_TAG = "Portable_web_ide";
+    public String filename;
 
+    private static final String ARG_SECTION_NUMBER = "section_number";
+    private static final String ARG_FILENAME = "filename";
+    private static final String APP_TAG = "Portable_web_ide";
     private PageViewModel pageViewModel;
 
+    ViewPager2 viewPager;
+    SectionsPagerAdapter pagerAdapter;
+
+
+
+
     public static PlaceholderFragment newInstance(int index) {
+        Log.i(APP_TAG,"Instance ");
         PlaceholderFragment fragment = new PlaceholderFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_SECTION_NUMBER, index);
-        fragment.setArguments(bundle);
 
+        fragment.setArguments(bundle);
         return fragment;
     }
-    //пытаюсь понять, тот ли это фрагмент
 
-    public static PlaceholderFragment getInstance(int index){
 
-        return currentFragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        currentFragment = this;
-        pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
+
+        /*pageViewModel = new ViewModelProvider(this).get(PageViewModel.class);
         int index = 1;
         if (getArguments() != null) {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
         }
-        pageViewModel.setIndex(index);
+        pageViewModel.setIndex(index);*/
 
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.fragment_main, container, false);
+
+        /*root = inflater.inflate(R.layout.fragment_main, container, false);
+
         final TextView textView = root.findViewById(R.id.section_label);
         pageViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -75,15 +90,26 @@ public class PlaceholderFragment extends Fragment {
                 textView.setText(s);
             }
         });
-        //EditText editText = root.findViewById(R.id.edit_text);
-        //browseFiles();
+        //saveFile(fileName);
+        return root;*/
 
-        //readFile(fileName);
-        saveFile(fileName);
+        View root = inflater.inflate(R.layout.fragment_main, container, false);
+
+        Log.i(APP_TAG,"OnCreateView");
+
+
         return root;
+
     }
 
-    public void readFile(String fileName) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+        Log.i(APP_TAG, "OnViewCreated");
+
+    }
+
+      public void readFile(String fileName) {
         EditText editText = root.findViewById(R.id.edit_text);
         Log.i(APP_TAG,String.valueOf(R.id.edit_text));
         try {

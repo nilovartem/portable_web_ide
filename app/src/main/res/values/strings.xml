@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">Portable_web_ide</string>
     <string name="action_settings">Настройки</string>
-    <string name="action_open_file">Открыть файл</string>
-    <string name="action_save_file">Сохранить файл</string>
+    <string name="action_open_file">Открыть</string>
+    <string name="action_save_file">Сохранить</string>
+    <string name="action_close_file">Закрыть</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -29,4 +30,6 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="tab_text_1">Начальная вкладка</string>
     <string name="tab_text_2">Tab 2</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
