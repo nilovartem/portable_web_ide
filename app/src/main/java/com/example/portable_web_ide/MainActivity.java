@@ -49,18 +49,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initToolbar();
+
         //pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),this.getLifecycle());
         pagerAdapter = new SectionsPagerAdapter(this);
-       
-        //viewPager = findViewById(R.id.view_pager);
-        //TabLayout tabLayout = findViewById(R.id.tab_layout);
-       // viewPager.setAdapter(pagerAdapter);
-/*
-        new TabLayoutMediator(tabLayout, viewPager,
-                (tab, position) -> tab.setText("A")
-        ).attach();*/
+
+        MyApp singletonexample = MyApp.getInstance();
+        singletonexample.init(getApplicationContext());
+        Log.i(APP_TAG,"Имя пакета " + MyApp.get().getPackageName());
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i(APP_TAG,"Номер фрагмента" + String.valueOf(fragmentPosition));
         }
         return super.onOptionsItemSelected(item);
+
     }
 
 
@@ -132,8 +129,8 @@ public class MainActivity extends AppCompatActivity {
                 public void onActivityResult(Uri uri) {
                     // Handle the returned Uri
                     Log.i(APP_TAG,String.valueOf(uri));
-                    pagerAdapter.addPage(parseUri(uri));
-                    pagerAdapter.notifyDataSetChanged();
+                    pagerAdapter.addPage(uri);
+                    //pagerAdapter.notifyDataSetChanged();
                 }
             });
 

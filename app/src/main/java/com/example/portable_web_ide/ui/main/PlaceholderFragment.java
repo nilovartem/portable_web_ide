@@ -1,7 +1,9 @@
 package com.example.portable_web_ide.ui.main;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,11 +24,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.portable_web_ide.MainActivity;
+import com.example.portable_web_ide.MyApp;
 import com.example.portable_web_ide.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -38,8 +44,10 @@ import java.util.ArrayList;
  */
 public class PlaceholderFragment extends Fragment {
 
-    private View root;
-    public String filename;
+
+
+
+
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String ARG_FILENAME = "filename";
@@ -50,18 +58,18 @@ public class PlaceholderFragment extends Fragment {
     SectionsPagerAdapter pagerAdapter;
 
 
+    public static PlaceholderFragment newInstance(int index, String filename) {
 
-
-    public static PlaceholderFragment newInstance(int index) {
-        Log.i(APP_TAG,"Instance ");
+        Log.i(APP_TAG, "Instance ");
         PlaceholderFragment fragment = new PlaceholderFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_SECTION_NUMBER, index);
+        bundle.putString(ARG_FILENAME,filename);
 
         fragment.setArguments(bundle);
+        Log.i(APP_TAG,"Фрагмент" + String.valueOf(index));
         return fragment;
     }
-
 
 
     @Override
@@ -95,8 +103,14 @@ public class PlaceholderFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_main, container, false);
 
-        Log.i(APP_TAG,"OnCreateView");
 
+        Log.i(APP_TAG, "OnCreateView");
+        EditText editText  = root.findViewById(R.id.edit_text);
+        //Log.i(APP_TAG,"OnCreateView " + this.getArguments().getString(ARG_FILENAME));
+        editText.setText(this.getArguments().getString(ARG_FILENAME));
+
+
+        readFile(this.getArguments().getString(ARG_FILENAME),root);
 
         return root;
 
@@ -105,18 +119,20 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        Log.i(APP_TAG, "OnViewCreated");
+       // Log.i(APP_TAG, "OnViewCreated");
 
     }
 
-      public void readFile(String fileName) {
+    public void readFile(String filename,View root) {
         EditText editText = root.findViewById(R.id.edit_text);
-        Log.i(APP_TAG,String.valueOf(R.id.edit_text));
+        Log.i(APP_TAG,getActivity().getFilesDir().getPath() + "/" + filename);
+        //Log.i(APP_TAG, String.valueOf(R.id.edit_text));
         try {
-            InputStream inputStream = getContext().openFileInput(fileName);
+            FileInputStream fileInputStream = new FileInputStream(new File(getActivity().getFilesDir().getPath() + "/" + filename));
+            //InputStream inputStream = getContext().openFileInput(filename);
 
-            if (inputStream != null) {
-                InputStreamReader isr = new InputStreamReader(inputStream);
+            if (fileInputStream != null) {
+                InputStreamReader isr = new InputStreamReader(fileInputStream);
                 BufferedReader reader = new BufferedReader(isr);
                 String line;
                 StringBuilder builder = new StringBuilder();
@@ -125,7 +141,7 @@ public class PlaceholderFragment extends Fragment {
                     builder.append(line + "\n");
                 }
 
-                inputStream.close();
+                fileInputStream.close();
                 editText.setText(builder.toString());
             }
         } catch (Throwable t) {
@@ -133,19 +149,29 @@ public class PlaceholderFragment extends Fragment {
                     "Ошибка: " + t.toString(), Toast.LENGTH_LONG).show();
         }
     }
-    public void saveFile(String fileName) {
 
-        EditText editText = root.findViewById(R.id.edit_text);
-            Log.i(APP_TAG, String.valueOf(R.id.edit_text));
-            try {
-                OutputStream outputStream = getContext().openFileOutput(fileName, 0);
-                OutputStreamWriter osw = new OutputStreamWriter(outputStream);
-                osw.write(editText.getText().toString());
-                osw.close();
-            } catch (Throwable t) {
-                Toast.makeText(getContext(),
-                        "Ошибка: " + t.toString(), Toast.LENGTH_LONG).show();
-            }
+    public void saveFile() {
+
+        Log.i(APP_TAG, "Значение в  EditText: " + R.id.edit_text);
+        String filename = this.getArguments().getString(ARG_FILENAME);
+        Log.i(APP_TAG, "Сохранение файла " + filename);
+
+        Context context = MyApp.get();
+
+        Log.i(APP_TAG,context.getPackageName());
+
+        EditText editText = getView().findViewById(R.id.edit_text);
+
+        try {
+
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(filename, context.MODE_PRIVATE));
+            outputStreamWriter.write(editText.getText().toString());
+            outputStreamWriter.close();
+
+        } catch (IOException e) {
+
+        }
+
 
     }
 
