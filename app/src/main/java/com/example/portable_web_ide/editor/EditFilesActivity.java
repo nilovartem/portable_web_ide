@@ -1,62 +1,51 @@
-package com.example.portable_web_ide;
+package com.example.portable_web_ide.editor;
 
-import android.app.Activity;
-import android.app.Instrumentation;
-import android.app.VoiceInteractor;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.example.portable_web_ide.MyApp;
+import com.example.portable_web_ide.R;
+import com.example.portable_web_ide.SettingsActivity;
+import com.example.portable_web_ide.main.LocalFragment;
+import com.example.portable_web_ide.main.MainActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
 
 import androidx.activity.result.*;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager.widget.ViewPager;
-import androidx.activity.*;
+import androidx.core.content.FileProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.TabWidget;
-
-import com.example.portable_web_ide.ui.main.*;
-import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.io.File;
 
-public class MainActivity extends AppCompatActivity {
+public class EditFilesActivity extends AppCompatActivity {
 
     private static final int REQUEST_CHOOSE_FILE = 1;
     private static final String APP_TAG = "Portable_web_ide";
-    private SectionsPagerAdapter pagerAdapter;
+    private FilesPagerAdapter pagerAdapter;
     private ViewPager2 viewPager;
-
+    Uri filePathUri;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(APP_TAG,"EditFiles OnCreate");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_edit_files);
+
+        String filePath = getIntent().getStringExtra("filePath");
         initToolbar();
-
-        //pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),this.getLifecycle());
-        pagerAdapter = new SectionsPagerAdapter(this);
-
-        MyApp singletonexample = MyApp.getInstance();
-        singletonexample.init(getApplicationContext());
-        Log.i(APP_TAG,"Имя пакета " + MyApp.get().getPackageName());
+        pagerAdapter = new FilesPagerAdapter(this);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -66,17 +55,35 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        //File file = new File(filePath);
+        //filePathUri = Uri.fromFile(file);
+        //pagerAdapter.addPage(filePathUri);
+        pagerAdapter.addPages();
+        //pagerAdapter
     }
 
     public void initToolbar()
     {
+        EditFilesActivity currentActivity  = this;
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(APP_TAG,"Нажата кнопка Back");
+
+                pagerAdapter.saveFiles();
+                currentActivity.onBackPressed();
+            }
+        });
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_edit_files, menu);
         return true;
     }
 
@@ -90,20 +97,23 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Log.i(APP_TAG, "Переход на активити с настройками");
-            Intent intent = new Intent(MainActivity.this,SettingsActivity.class);
+            Intent intent = new Intent(EditFilesActivity.this, SettingsActivity.class);
             startActivity(intent);
         }
         if(id == R.id.action_open_file){
             //Нужно будет переделать, так как можно несколько раз открыть один и тот же файл,
-            //также нужно будет изменить название файла(чтобы можно было различать файлы с одинаковым названием,
-            //но с разным местоположением
+            //нужно сохранить все открытые фрагменты
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
 
-            mGetContent.launch("text/*");
-            Log.i(APP_TAG, "Нажата кнопка Открыть файл");
         }
         if(id == R.id.action_close_file){
             Log.i(APP_TAG, "Нажата кнопка Закрыть");
             pagerAdapter.closePage();
+            if(pagerAdapter.pages.size() == 0)
+            {
+                this.onBackPressed();
+            }
 
         }
         if(id == R.id.action_save_file){
@@ -111,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
             int fragmentPosition = viewPager.getCurrentItem();
             Log.i(APP_TAG,"Номер фрагмента" + String.valueOf(fragmentPosition));
         }
+
         return super.onOptionsItemSelected(item);
 
     }
@@ -123,15 +134,12 @@ public class MainActivity extends AppCompatActivity {
         return fileName;
     }
 
-    ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
-            new ActivityResultCallback<Uri>() {
-                @Override
-                public void onActivityResult(Uri uri) {
-                    // Handle the returned Uri
-                    Log.i(APP_TAG,String.valueOf(uri));
-                    pagerAdapter.addPage(uri);
-                    //pagerAdapter.notifyDataSetChanged();
-                }
-            });
+    ActivityResultLauncher<Intent> mGetContent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+
+        }
+    });
+
 
 }

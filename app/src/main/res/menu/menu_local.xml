@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.portable_web_ide.main.MainActivity">
+
+    <item
+        android:id="@+id/action_home"
+        android:title="@string/action_home"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/action_back"
+        android:title="@string/action_back"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/create_folder"
+        android:title="Создать папку"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/create_file"
+        android:title="Создать файл"
+        app:showAsAction="never" />
+
+
+
+</menu>

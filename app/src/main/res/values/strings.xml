@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Portable_web_ide</string>
+    <string name="action_back">Назад</string>
     <string name="action_settings">Настройки</string>
+    <string name="action_rename_file">Переименовать</string>
+    <string name="action_delete_file">Удалить</string>
+    <string name="action_add">Добавить что-либо</string>
+    <string name="action_home">Домашняя директория(files)</string>
     <string name="action_open_file">Открыть</string>
     <string name="action_save_file">Сохранить</string>
     <string name="action_close_file">Закрыть</string>
@@ -28,8 +33,12 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="tab_text_1">Начальная вкладка</string>
-    <string name="tab_text_2">Tab 2</string>
-<!-- TODO: Remove or change this placeholder text -->
+
+    <string name="tab_text_1">Локальные файлы</string>
+    <string name="tab_text_2">FTP</string>
+    <string name="tab_text_3">GitHub</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>

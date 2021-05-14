@@ -1,70 +1,51 @@
-package com.example.portable_web_ide.ui.main;
+package com.example.portable_web_ide.editor;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.portable_web_ide.MainActivity;
 import com.example.portable_web_ide.MyApp;
 import com.example.portable_web_ide.R;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PlaceholderFragment extends Fragment {
-
-
-
-
-
+public class FileFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
-    private static final String ARG_FILENAME = "filename";
+    private static final String ARG_FILEPATH = "filename";
     private static final String APP_TAG = "Portable_web_ide";
-    private PageViewModel pageViewModel;
+
 
     ViewPager2 viewPager;
-    SectionsPagerAdapter pagerAdapter;
+    FilesPagerAdapter pagerAdapter;
 
 
-    public static PlaceholderFragment newInstance(int index, String filename) {
+    public static FileFragment newInstance(int index, String filename) {
 
         Log.i(APP_TAG, "Instance ");
-        PlaceholderFragment fragment = new PlaceholderFragment();
+        FileFragment fragment = new FileFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_SECTION_NUMBER, index);
-        bundle.putString(ARG_FILENAME,filename);
+        bundle.putString(ARG_FILEPATH,filename);
 
         fragment.setArguments(bundle);
         Log.i(APP_TAG,"Фрагмент" + String.valueOf(index));
@@ -101,16 +82,16 @@ public class PlaceholderFragment extends Fragment {
         //saveFile(fileName);
         return root;*/
 
-        View root = inflater.inflate(R.layout.fragment_main, container, false);
+        View root = inflater.inflate(R.layout.fragment_edit_files, container, false);
 
 
-        Log.i(APP_TAG, "OnCreateView");
-        EditText editText  = root.findViewById(R.id.edit_text);
+        Log.i(APP_TAG, "OnCreateView" + this.getArguments().getString(ARG_FILEPATH));
+        EditText editText  = root.findViewById(R.id.textArea);
         //Log.i(APP_TAG,"OnCreateView " + this.getArguments().getString(ARG_FILENAME));
-        editText.setText(this.getArguments().getString(ARG_FILENAME));
+        editText.setText(this.getArguments().getString(ARG_FILEPATH));
 
 
-        readFile(this.getArguments().getString(ARG_FILENAME),root);
+        readFile(this.getArguments().getString(ARG_FILEPATH),root);
 
         return root;
 
@@ -123,12 +104,12 @@ public class PlaceholderFragment extends Fragment {
 
     }
 
-    public void readFile(String filename,View root) {
-        EditText editText = root.findViewById(R.id.edit_text);
-        Log.i(APP_TAG,getActivity().getFilesDir().getPath() + "/" + filename);
+    public void readFile(String filePath,View root) {
+        EditText editText = root.findViewById(R.id.textArea);
+
         //Log.i(APP_TAG, String.valueOf(R.id.edit_text));
         try {
-            FileInputStream fileInputStream = new FileInputStream(new File(getActivity().getFilesDir().getPath() + "/" + filename));
+            FileInputStream fileInputStream = new FileInputStream(new File(filePath));
             //InputStream inputStream = getContext().openFileInput(filename);
 
             if (fileInputStream != null) {
@@ -152,19 +133,21 @@ public class PlaceholderFragment extends Fragment {
 
     public void saveFile() {
 
-        Log.i(APP_TAG, "Значение в  EditText: " + R.id.edit_text);
-        String filename = this.getArguments().getString(ARG_FILENAME);
-        Log.i(APP_TAG, "Сохранение файла " + filename);
+        Log.i(APP_TAG, "Значение в  EditText: " + R.id.textArea);
+        String filePath = this.getArguments().getString(ARG_FILEPATH);
+        File file = new File(filePath);
+
+        Log.i(APP_TAG, "Сохранение файла " + filePath);
 
         Context context = MyApp.get();
 
         Log.i(APP_TAG,context.getPackageName());
 
-        EditText editText = getView().findViewById(R.id.edit_text);
+        EditText editText = getView().findViewById(R.id.textArea);
 
         try {
 
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(filename, context.MODE_PRIVATE));
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(file));
             outputStreamWriter.write(editText.getText().toString());
             outputStreamWriter.close();
 
