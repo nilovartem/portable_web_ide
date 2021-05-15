@@ -12,6 +12,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,20 +25,19 @@ import org.w3c.dom.Text;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TextProcessor extends androidx.appcompat.widget.AppCompatEditText {
+public class TextProcessor extends androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView {
 
     private static final String APP_MODULE = "TextProcessor";
-    private Pattern keyWords = Pattern.compile("\\b(a|b)\\b");
+    //Входные данные
+    private Pattern keyWords = Pattern.compile("\\b((a(bstract|nd|rray|s))|(c(a(llable|se|tch)|l(ass|one)|on(st|tinue)))|(d(e(clare|fault)|ie|o))|(e(cho|lse(if)?|mpty|nd(declare|for(each)?|if|switch|while)|val|x(it|tends)))|(f(inal|or(each)?|unction))|(g(lobal|oto))|(i(f|mplements|n(clude(_once)?|st(anceof|eadof)|terface)|sset))|(n(amespace|ew))|(p(r(i(nt|vate)|otected)|ublic))|(re(quire(_once)?|turn))|(s(tatic|witch))|(t(hrow|r(ait|y)))|(u(nset|se))|(__halt_compiler|break|list|(x)?or|var|while))\\b");
 
     private Paint paintText;
+
 
     private Paint paintIndent;
 
     //Фиксированный отступ
     private int indentPadding = 100;
-
-
-
 
     public TextProcessor(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -85,7 +85,6 @@ public class TextProcessor extends androidx.appcompat.widget.AppCompatEditText {
         }
 
     }
-
     public void init() {
         paintText = new Paint();
         paintText.setColor(Color.GRAY);

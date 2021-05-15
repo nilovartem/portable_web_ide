@@ -116,13 +116,8 @@ public class EditFilesActivity extends AppCompatActivity {
             }
 
         }
-        if(id == R.id.action_save_file){
-            Log.i(APP_TAG, "Нажата кнопка Сохранить файл");
-            int fragmentPosition = viewPager.getCurrentItem();
-            Log.i(APP_TAG,"Номер фрагмента" + String.valueOf(fragmentPosition));
-        }
-
         return super.onOptionsItemSelected(item);
+
 
     }
 
