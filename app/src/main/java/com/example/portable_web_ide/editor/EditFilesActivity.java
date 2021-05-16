@@ -103,8 +103,8 @@ public class EditFilesActivity extends AppCompatActivity {
         if(id == R.id.action_open_file){
             //Нужно будет переделать, так как можно несколько раз открыть один и тот же файл,
             //нужно сохранить все открытые фрагменты
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            pagerAdapter.saveFiles();
+            onBackPressed();
 
         }
         if(id == R.id.action_close_file){
@@ -112,7 +112,7 @@ public class EditFilesActivity extends AppCompatActivity {
             pagerAdapter.closePage();
             if(pagerAdapter.pages.size() == 0)
             {
-                this.onBackPressed();
+                onBackPressed();
             }
 
         }

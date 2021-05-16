@@ -18,6 +18,8 @@ public class ActiveFiles {
 
         return instance;
     }
-    private ActiveFiles() { }
+    private ActiveFiles() {
+
+    }
 
 }

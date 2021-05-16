@@ -197,12 +197,10 @@ public class FilesPagerAdapter extends FragmentStateAdapter {
             //Log.i(APP_TAG,"В Н И М А Н И Е " + currentFile.getPath());
             ActiveFiles.getInstance().filesUri.remove(currentUri);
             fragment.saveFile();
-
             pageTitles.remove(position);
             pagesId.remove(position);
             pages.remove(position);
             this.notifyDataSetChanged();
-
         }
         Log.i(APP_TAG,"CLOSE PAGE");
     }

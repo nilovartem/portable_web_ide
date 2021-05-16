@@ -8,9 +8,10 @@
     tools:context=".editor.FileFragment">
 
     <com.example.portable_web_ide.editor.TextProcessor
+
         android:id="@+id/textArea"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="top|left"></com.example.portable_web_ide.editor.TextProcessor>
+        android:gravity="top|left" />
 
 </LinearLayout>
