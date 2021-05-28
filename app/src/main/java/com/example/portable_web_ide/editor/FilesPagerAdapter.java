@@ -186,8 +186,7 @@ public class FilesPagerAdapter extends FragmentStateAdapter {
             }
         }
     }
-    public void closePage()
-    {
+    public void closePage(){
         int position = viewPager.getCurrentItem();
         Log.i(APP_TAG,"position " + position);
 
@@ -203,6 +202,13 @@ public class FilesPagerAdapter extends FragmentStateAdapter {
             this.notifyDataSetChanged();
         }
         Log.i(APP_TAG,"CLOSE PAGE");
+    }
+    public String getCurrentPagePath(){
+
+        int position = viewPager.getCurrentItem();
+        FileFragment fragment = pages.get(position);
+        return fragment.getFilePath();
+
     }
     @NonNull
     @Override

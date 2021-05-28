@@ -16,7 +16,4 @@
         android:divider="@null"
         ></ListView>
 
-
-
-
 </LinearLayout>

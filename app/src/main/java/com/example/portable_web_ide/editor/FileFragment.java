@@ -154,8 +154,12 @@ public class FileFragment extends Fragment {
         } catch (IOException e) {
 
         }
-
-
+    }
+    public String getFilePath()
+    {
+        String filePath = this.getArguments().getString(ARG_FILEPATH);
+        File file = new File(filePath);
+        return file.getPath();
     }
 
 

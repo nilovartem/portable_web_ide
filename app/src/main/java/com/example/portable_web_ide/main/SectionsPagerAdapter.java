@@ -10,8 +10,12 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.portable_web_ide.R;
+import com.example.portable_web_ide.Section;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+
+import java.io.File;
+import java.util.ArrayList;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -22,6 +26,8 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
     private static final String MODULE_TAG = "SectionPagerAdapter";
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2,R.string.tab_text_3};
+
+    private ArrayList<Section> fragments = new ArrayList<>();
 
     ViewPager2 viewPager;
     SectionsPagerAdapter pagerAdapter;
@@ -82,25 +88,38 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
             case 0:
             {
                 LocalFragment localFragment = new LocalFragment();
+                fragments.add(localFragment);
                 return localFragment;
             }
             case 1:
             {
                 FtpFragment ftpFragment = new FtpFragment();
+                fragments.add(ftpFragment);
                 return ftpFragment;
             }
             case 2:
             {
                 GitFragment gitFragment = new GitFragment();
+                fragments.add(gitFragment);
                 return gitFragment;
             }
             default:{
-                Log.i(MODULE_TAG,"ХЕРОТА");
-                return null;
+               return null;
             }
         }
 
     }
+
+    public Section getCurrentFragment()
+    {
+       return fragments.get(viewPager.getCurrentItem());
+    }
+    /*
+    public ArrayList<File> getSelectedFiles()
+    {
+        Section fragment = fragments.get(viewPager.getCurrentItem());
+        fragment.multipleSelectedFiles.get
+    }*/
 
     @Override
     public int getItemCount() {

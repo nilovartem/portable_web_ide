@@ -9,13 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.portable_web_ide.R;
+import com.example.portable_web_ide.Section;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link GitFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GitFragment extends Fragment {
+public class GitFragment extends Section {
 
 
     public GitFragment() {

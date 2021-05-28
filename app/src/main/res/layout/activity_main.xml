@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".main.MainActivity">
 
+
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,16 +29,73 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <LinearLayout
+        android:id="@+id/panel"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:popupTheme="@style/Theme.Portable_web_ide.PopupOverlay"
-        android:layout_gravity="bottom"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:background="@color/teal_200"
+        android:layout_gravity="bottom">
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TableRow>
+                <Button
+                    android:id="@+id/move_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Переместить">
+                </Button>
+
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Передать по FTP">
+                </Button>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Загрузить в GitHub">
+                </Button>
+            </TableRow>
+
+
+        </TableLayout>
+
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="LOWER PANEL"></TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/second_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:background="@color/teal_200"
+        android:layout_gravity="bottom">
+        <Button
+            android:id="@+id/move_here_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Переместить сюда"></Button>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Отмена"></Button>
+    </LinearLayout>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -45,4 +104,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_dialog_email" />
+
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

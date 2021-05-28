@@ -15,6 +15,9 @@ import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -25,6 +28,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.portable_web_ide.MyApp;
 import com.example.portable_web_ide.R;
+import com.example.portable_web_ide.Section;
 import com.example.portable_web_ide.editor.ActiveFiles;
 import com.example.portable_web_ide.editor.EditFilesActivity;
 
@@ -33,17 +37,28 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+
+
+
 /**
  * A placeholder fragment containing a simple view.
  */
-public class LocalFragment extends Fragment {
+public class LocalFragment extends Section {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String MODULE_TAG = "LocalFragment";
+    private static final int LV_DEFAULT_MODE = 0;
+    private static final int LV_MULTIPLE_SELECT_MODE = 1;
+    private static final int LV_MOVE_MODE = 2;
     ListView listView;
+    public int listViewMode;
     File currentFile;
     ArrayList<File> files;
+
     public LocalFragment(){
+
+        multipleSelectedFiles = new ArrayList<>();
+        listViewMode = LV_DEFAULT_MODE;
 
     }
 /*
@@ -85,7 +100,7 @@ public class LocalFragment extends Fragment {
                         }
                         if(!currentFile.equals(MyApp.getLocalDirectory())){
 
-                            SetListViewAdapter(currentFile.getParentFile());
+                            SetListViewAdapter(currentFile.getParentFile(),LV_DEFAULT_MODE);
                             return true;
                         }
                         else
@@ -104,6 +119,20 @@ public class LocalFragment extends Fragment {
                         createFileDialog("file");
                         return true;
                     }
+                    case R.id.action_select:{
+
+                        Log.i(MODULE_TAG,"Выбрать");
+
+                        View view = getActivity().findViewById(R.id.panel);
+                        view.setVisibility(view.isShown() ? View.GONE : View.VISIBLE);
+                        item.setTitle(view.isShown() ? "Отмена" : "Выбрать");
+                        SetListViewAdapter(currentFile, listView.getChoiceMode() == ListView.CHOICE_MODE_SINGLE ? LV_MULTIPLE_SELECT_MODE : LV_DEFAULT_MODE);
+                        Button moveButton = getActivity().findViewById(R.id.move_button);
+                        moveButton.setClickable(false);
+
+                        return true;
+
+                    }
                     default:{
 
                         return false;
@@ -113,44 +142,113 @@ public class LocalFragment extends Fragment {
             }
         });
 
+        //Выводим файлы в стандартное представление списка
         listView = root.findViewById(R.id.listView);
-
         File initialDirectory = new File(MyApp.getLocalDirectory().getPath());
         Log.i(MODULE_TAG,"Начальная директория " + initialDirectory.getPath());
-        SetListViewAdapter(initialDirectory);
+        SetListViewAdapter(initialDirectory,LV_DEFAULT_MODE);
+        registerForContextMenu(listView);
+        //
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Получаем директорию, отправляем в GetFiles
+
+                Log.i(MODULE_TAG, "Клик");
                 File selectedFile = files.get(position);
-                if(selectedFile.isDirectory())
-                {
-                    SetListViewAdapter(selectedFile);
-                }
-                if(selectedFile.isFile())
-                {
-                    //Открыть редактор файлов
-                    Intent intent = new Intent(getActivity(), EditFilesActivity.class);
-                    Log.i(MODULE_TAG,"Открываем файл" + selectedFile.getPath());
-                    intent.putExtra("filePath",selectedFile.getPath());
-                    if(!ActiveFiles.getInstance().filesUri.contains(Uri.fromFile(selectedFile)))
-                    {
-                        ActiveFiles.getInstance().filesUri.add(Uri.fromFile(selectedFile));
-                        startActivity(intent);
-                    }
-                    else
-                    {
-                        Log.i(MODULE_TAG,"Внимание!!!Такой файл уже открыт!");
-                        startActivity(intent);
+                switch (listViewMode) {
+                    case LV_DEFAULT_MODE: {
+                        Log.i(MODULE_TAG,"DEFAULT MODE");
+
+                        if (selectedFile.isDirectory()) {
+                            SetListViewAdapter(selectedFile, LV_DEFAULT_MODE);
+                        }
+                        if (selectedFile.isFile()) {
+
+                            //Открыть редактор файлов
+                            Intent intent = new Intent(getActivity(), EditFilesActivity.class);
+                            Log.i(MODULE_TAG, "Открываем файл" + selectedFile.getPath());
+                            intent.putExtra("filePath", selectedFile.getPath());
+                            if (!ActiveFiles.getInstance().filesUri.contains(Uri.fromFile(selectedFile))) {
+                                ActiveFiles.getInstance().filesUri.add(Uri.fromFile(selectedFile));
+                                startActivity(intent);
+                            } else {
+                                Log.i(MODULE_TAG, "Внимание!!!Такой файл уже открыт!");
+                                startActivity(intent);
+                            }
+                        }
+                        break;
                     }
 
-                }
+                    case LV_MULTIPLE_SELECT_MODE: {
+                        Log.i(MODULE_TAG,"MULTIPLE MODE");
+                       CheckBox checkBox = view.findViewById(R.id.checkbox);
 
+                        if (!checkBox.isChecked()) {
+                            checkBox.setChecked(true);
+                            Log.i(MODULE_TAG, "Выбран файл " + selectedFile.getName());
+                            multipleSelectedFiles.add(selectedFile);
+
+                        } else {
+                            Log.i(MODULE_TAG, "Значение выбора снято с файла " + selectedFile.getName());
+                            multipleSelectedFiles.remove(selectedFile);
+                            checkBox.setChecked(false);
+                        }
+                        Button moveButton = getActivity().findViewById(R.id.move_button);
+                        moveButton.setClickable(multipleSelectedFiles.size()!=0 ? true : false);
+                        break;
+
+                    }
+                    case LV_MOVE_MODE: {
+                        Log.i(MODULE_TAG,"MOVE MODE");
+                        if (selectedFile.isDirectory()) {
+                            SetListViewAdapter(selectedFile, LV_MOVE_MODE);
+                        }
+
+                        Log.i(MODULE_TAG,"Выбран" + selectedFile.getName());
+                        break;
+                    }
+                }
+            }
+        });
+
+
+        //отлов кнопок нижней панели
+        Button moveButton = getActivity().findViewById(R.id.move_button);
+        moveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(MODULE_TAG,"Нажата кнопка Переместить");
+                SetListViewAdapter(currentFile, LV_MOVE_MODE);
+                View firstPanel = getActivity().findViewById(R.id.panel);
+                firstPanel.setVisibility(View.GONE);
+                View secondPanel = getActivity().findViewById(R.id.second_panel);
+                secondPanel.setVisibility(View.VISIBLE);
+
+                //поменять layout
 
             }
         });
 
-        registerForContextMenu(listView);
+        Button moveHere = getActivity().findViewById(R.id.move_here_button);
+        moveHere.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(MODULE_TAG,"Нажата кнопка переместить сюда");
+
+                for (File selectedFile:multipleSelectedFiles
+                     ) {
+                    Log.i(MODULE_TAG,currentFile.getPath() + "/" + selectedFile.getName());
+                    File destFile = new File(currentFile.getPath() + "/" + selectedFile.getName());
+                    selectedFile.renameTo(destFile);
+                }
+                SetListViewAdapter(currentFile,LV_DEFAULT_MODE);
+                View secondPanel = getActivity().findViewById(R.id.second_panel);
+                secondPanel.setVisibility(View.GONE);
+
+
+            }
+        });
 
         return root;
     }
@@ -186,7 +284,7 @@ public class LocalFragment extends Fragment {
                     }
                 }
                 //обновляем коллекцию
-                SetListViewAdapter(file.getParentFile());
+                SetListViewAdapter(file.getParentFile(),LV_DEFAULT_MODE);
 
             }
         });
@@ -243,7 +341,7 @@ public class LocalFragment extends Fragment {
                         File renamedFile = new File(newPath);
                         files.get(info.position).renameTo(renamedFile);
                         //обновляем коллекцию
-                        SetListViewAdapter(files.get(info.position).getParentFile());
+                        SetListViewAdapter(files.get(info.position).getParentFile(),ListView.CHOICE_MODE_SINGLE);
 
                     }
                 });
@@ -261,7 +359,7 @@ public class LocalFragment extends Fragment {
                 Log.i(MODULE_TAG,"Удалить файл" + String.valueOf(info.position));
                 File parentFile = files.get(info.position).getParentFile();
                 files.get(info.position).delete();
-                SetListViewAdapter(parentFile);
+                SetListViewAdapter(parentFile,LV_DEFAULT_MODE);
                 return true;
             }
             default:{
@@ -274,12 +372,45 @@ public class LocalFragment extends Fragment {
     {
 
     }
-    void SetListViewAdapter(File fileDirectory)
+    public void SetListViewAdapter(File fileDirectory, int mode)
     {
+
         currentFile = fileDirectory;
         files = new ArrayList<>(Arrays.asList(fileDirectory.listFiles()));
-        FileListAdapter fileListAdapter = new FileListAdapter(MyApp.get(),R.layout.text_row_item,files);
+        FileListAdapter fileListAdapter = null;
+        switch (mode)
+        {
+            case LV_DEFAULT_MODE:{
+
+                registerForContextMenu(listView);
+                listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                fileListAdapter = new FileListAdapter(MyApp.get(),R.layout.text_row_item,files,ListView.CHOICE_MODE_SINGLE);
+                break;
+
+            }
+            case LV_MULTIPLE_SELECT_MODE:{
+                unregisterForContextMenu(listView);
+                listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+                fileListAdapter = new FileListAdapter(MyApp.get(), R.layout.checkable_text_row_item,files,ListView.CHOICE_MODE_MULTIPLE);
+                break;
+
+            }
+            case LV_MOVE_MODE:{
+                unregisterForContextMenu(listView);
+                listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                fileListAdapter = new FileListAdapter(MyApp.get(),R.layout.text_row_item,files,ListView.CHOICE_MODE_SINGLE);
+                break;
+
+            }
+        }
+        listViewMode = mode;
+        Log.i(MODULE_TAG,"Режим"+ String.valueOf(mode));
+
+
+        //old
+
         listView.setAdapter(fileListAdapter);
+
     }
 
 }

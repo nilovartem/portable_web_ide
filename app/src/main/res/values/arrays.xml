@@ -1,10 +1,18 @@
 <resources>
+<!--Значения для подсказок в автодополнении-->
+    <string-array name="prompts">
+        <item>as</item>
+        <item>array</item>
+        <item>qwerty</item>
+        <item>custom</item>
+        <item>abstract</item>
+        <item>arrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr</item>
+    </string-array>
     <!-- Reply Preference -->
     <string-array name="reply_entries">
         <item>Reply</item>
         <item>Reply to all</item>
     </string-array>
-
     <string-array name="reply_values">
         <item>reply</item>
         <item>reply_all</item>

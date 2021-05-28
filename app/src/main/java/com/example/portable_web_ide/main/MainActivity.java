@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.example.portable_web_ide.MyApp;
 import com.example.portable_web_ide.R;
+import com.example.portable_web_ide.Section;
 import com.example.portable_web_ide.SettingsActivity;
 import com.example.portable_web_ide.editor.ActiveFiles;
 import com.example.portable_web_ide.editor.EditFilesActivity;
@@ -15,12 +16,14 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -59,6 +62,28 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+       /*
+        Button moveButton = findViewById(R.id.move_button);
+        moveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(MODULE_TAG,"Нажата кнопка Переместить");
+
+               //Section fragment = sectionsPagerAdapter.getCurrentFragment();
+
+               int fragment = sectionsPagerAdapter.viewPager.getCurrentItem();
+               LocalFragment localFragment = (LocalFragment) getSupportFragmentManager().findFragmentById(0);
+               Log.i(MODULE_TAG,String.valueOf(localFragment.multipleSelectedFiles.size()));
+
+
+
+
+            }
+        });
+        */
+
+
     }
 
     protected void setInitialDirectories(){

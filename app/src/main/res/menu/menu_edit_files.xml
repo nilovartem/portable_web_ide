@@ -18,4 +18,9 @@
         android:orderInCategory="100"
         android:title="@string/action_close_file"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_view"
+        android:orderInCategory="100"
+        android:title="@string/action_view"
+        app:showAsAction="always"/>
 </menu>

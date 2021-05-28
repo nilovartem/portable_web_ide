@@ -12,6 +12,6 @@
         android:background="?attr/colorPrimary"
         app:popupTheme="@style/Theme.Portable_web_ide.PopupOverlay"
         android:layoutDirection="ltr"
-        />
+        app:title=""></androidx.appcompat.widget.Toolbar>
 
 </LinearLayout>

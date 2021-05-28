@@ -5,6 +5,11 @@
     tools:context="com.example.portable_web_ide.main.MainActivity">
 
     <item
+        android:id="@+id/action_add"
+        android:title="Добавить подключение"
+        app:showAsAction="always"
+        />
+    <item
         android:id="@+id/action_back"
         android:title="@string/action_back"
         app:showAsAction="always" />
@@ -13,16 +18,4 @@
         android:id="@+id/action_select"
         android:title="@string/action_select"
         app:showAsAction="always" />
-
-    <item
-        android:id="@+id/create_folder"
-        android:title="Создать папку"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/create_file"
-        android:title="Создать файл"
-        app:showAsAction="never" />
-
-
-
-</menu>
+    </menu>

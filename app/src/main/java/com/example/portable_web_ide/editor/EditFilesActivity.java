@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.example.portable_web_ide.MyApp;
 import com.example.portable_web_ide.R;
 import com.example.portable_web_ide.SettingsActivity;
+import com.example.portable_web_ide.editor.viewer.ViewerActivity;
 import com.example.portable_web_ide.main.LocalFragment;
 import com.example.portable_web_ide.main.MainActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -66,7 +67,9 @@ public class EditFilesActivity extends AppCompatActivity {
     {
         EditFilesActivity currentActivity  = this;
         Toolbar toolbar = findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -105,7 +108,6 @@ public class EditFilesActivity extends AppCompatActivity {
             //нужно сохранить все открытые фрагменты
             pagerAdapter.saveFiles();
             onBackPressed();
-
         }
         if(id == R.id.action_close_file){
             Log.i(APP_TAG, "Нажата кнопка Закрыть");
@@ -114,6 +116,15 @@ public class EditFilesActivity extends AppCompatActivity {
             {
                 onBackPressed();
             }
+
+        }
+        if(id == R.id.action_view)
+        {
+            //Открываем браузер для просмотра файла
+            Log.i(APP_TAG,"Current page path " + pagerAdapter.getCurrentPagePath());
+            Intent intent = new Intent(EditFilesActivity.this, ViewerActivity.class);
+            intent.putExtra("path",pagerAdapter.getCurrentPagePath());
+            startActivity(intent);
 
         }
         return super.onOptionsItemSelected(item);

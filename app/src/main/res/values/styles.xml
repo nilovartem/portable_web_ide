@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+
+    </style>
+
+
+    <style name="AppTheme" parent="AppBaseTheme">
+
+    </style>
+
+    <style name="MY.DIALOG" parent="ThemeOverlay.AppCompat.ActionBar">
+
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsFloating">false</item>
+
+
+
+        <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
+    </style>
+
+</resources>
