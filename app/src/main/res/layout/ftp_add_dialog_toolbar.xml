@@ -13,20 +13,16 @@
         app:popupTheme="@style/Theme.Portable_web_ide.PopupOverlay"
         app:title="">
 
-   <TableLayout
-       android:layout_width="fill_parent"
-       android:layout_height="fill_parent"
-       android:stretchColumns="1">
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" >
+
 
                 <Button
+                    android:id="@+id/cancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Отмена"
+                    android:layout_gravity="left"
 
-                    android:textSize="15dp"></Button>
+                    ></Button>
 
 
 
@@ -35,34 +31,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Новое подключение"
-                    android:textSize="20dp"
+                    android:textSize="18sp"
                     android:textAlignment="center"
-                    android:textColor="@color/white"></TextView>
+                    android:textColor="@color/white"
+                    android:layout_gravity="center"></TextView>
 
                     <Button
                         android:id="@+id/done"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Добавить"
+                        android:layout_gravity="right"
 
-                        android:textSize="15dp"></Button>
-
-
-            </TableRow>
-
-
-
-   </TableLayout>
-
-
-
-
-
-
-
-
-
-
+                        ></Button>
 
 
     </androidx.appcompat.widget.Toolbar>

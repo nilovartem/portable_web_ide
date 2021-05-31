@@ -12,39 +12,44 @@
         app:popupTheme="@style/Theme.Portable_web_ide.PopupOverlay"
         app:title="">
 
-    <TableLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:stretchColumns="1">
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
 
-            <Button
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back_inactive_24"
+            android:backgroundTint="@color/design_default_color_primary"
+            android:layout_gravity="left"
+            ></ImageButton>
+
+        <ImageButton
+            android:id="@+id/home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_home_inactive_24"
+            android:backgroundTint="@color/design_default_color_primary"
+            android:layout_gravity="left"
+            ></ImageButton>
+
+            <ImageButton
+                android:id="@+id/add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:foreground="@drawable/ic_add_24"
-                ></Button>
+                android:src="@drawable/ic_add_24"
+                android:backgroundTint="@color/design_default_color_primary"
+                android:layout_gravity="left"
+                ></ImageButton>
 
             <Button
+                android:id="@+id/select"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Выбрать"
-                android:textSize="15dp"></Button>
-
-
-            <Button
-                android:id="@+id/done"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Добавить"
-                android:textSize="15dp"></Button>
-
-
-        </TableRow>
+                android:layout_gravity="right"></Button>
 
 
 
-    </TableLayout>
+
+
     </androidx.appcompat.widget.Toolbar>
 </LinearLayout>

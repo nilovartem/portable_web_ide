@@ -31,7 +31,7 @@
         </TableRow>
         <TableRow>
             <TextView android:text="Порт подключения"></TextView>
-            <EditText android:id="@+id/port" android:inputType="number"></EditText>
+            <EditText android:id="@+id/port"></EditText>
         </TableRow>
 
 

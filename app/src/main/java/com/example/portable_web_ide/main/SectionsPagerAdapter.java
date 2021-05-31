@@ -11,10 +11,11 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.portable_web_ide.R;
 import com.example.portable_web_ide.Section;
+import com.example.portable_web_ide.main.ftp.FtpFragment;
+import com.example.portable_web_ide.main.local.LocalFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -27,7 +28,7 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2,R.string.tab_text_3};
 
-    private ArrayList<Section> fragments = new ArrayList<>();
+    private ArrayList<Fragment> fragments = new ArrayList<>();
 
     ViewPager2 viewPager;
     SectionsPagerAdapter pagerAdapter;
@@ -110,7 +111,7 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
 
     }
 
-    public Section getCurrentFragment()
+    public Fragment getCurrentFragment()
     {
        return fragments.get(viewPager.getCurrentItem());
     }

@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         activeFiles.filesUri = new ArrayList<Uri>();
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this);
+        /*
         FloatingActionButton fab = findViewById(R.id.fab);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
        /*
         Button moveButton = findViewById(R.id.move_button);

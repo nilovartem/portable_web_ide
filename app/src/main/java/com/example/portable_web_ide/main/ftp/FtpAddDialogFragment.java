@@ -1,4 +1,4 @@
-package com.example.portable_web_ide.main;
+package com.example.portable_web_ide.main.ftp;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,8 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -21,20 +19,20 @@ import androidx.fragment.app.Fragment;
 
 import com.example.portable_web_ide.R;
 
-public class FtpDialogFragment extends DialogFragment {
-    private static final String MODULE_TAG = "FtpDialogFragment";
+public class FtpAddDialogFragment extends DialogFragment {
+    private static final String MODULE_TAG = "FtpAddDialogFragment";
     public String serverName;
     public String hostName;
     public String userName;
     public String password;
     public int port;
 
-    public FtpDialogFragment()
+    public FtpAddDialogFragment()
     {
 
     }
-    public static FtpDialogFragment newInstance() {
-        FtpDialogFragment fragment = new FtpDialogFragment();
+    public static FtpAddDialogFragment newInstance() {
+        FtpAddDialogFragment fragment = new FtpAddDialogFragment();
 
        return fragment;
     }
@@ -54,6 +52,7 @@ public class FtpDialogFragment extends DialogFragment {
         View root = inflater.inflate(R.layout.fragment_ftp_dialog,container,false);
         Toolbar toolbar = root.findViewById(R.id.toolbar);
 
+
         Button buttonDone = root.findViewById(R.id.done);
         buttonDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,12 +64,15 @@ public class FtpDialogFragment extends DialogFragment {
                     hostName = ((EditText) root.findViewById(R.id.host_name)).getText().toString();
                     userName = ((EditText) root.findViewById(R.id.user_name)).getText().toString();
                     password = ((EditText) root.findViewById(R.id.password)).getText().toString();
-                    port = Integer.getInteger(((EditText) root.findViewById(R.id.password)).getText().toString());
+                    String portString = ((EditText) root.findViewById(R.id.port)).getText().toString();
+                    port = Integer.valueOf(portString);
                 }
                 catch (Exception exception){
+                    Log.i(MODULE_TAG,exception.toString());
 
                     Log.i(MODULE_TAG,"Не введены все данные");
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Внимание");
                     builder.setMessage("Вы ввели не все данные!!!!");
                     builder.setCancelable(true);
 
@@ -83,7 +85,7 @@ public class FtpDialogFragment extends DialogFragment {
                             });
                     AlertDialog alert = builder.create();
                     alert.show();
-                    //return;
+                    return;
                 }
                 getDialog().dismiss();
                 Fragment parentFragment = getParentFragment();
@@ -94,7 +96,14 @@ public class FtpDialogFragment extends DialogFragment {
 
             }
         });
-        //toolbar.inflateMenu(R.menu.menu_ftp_add_dialog);
+
+        Button buttonCancel = root.findViewById(R.id.cancel);
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDialog().dismiss();
+            }
+        });
 
         return root;
 

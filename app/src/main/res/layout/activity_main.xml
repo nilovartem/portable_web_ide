@@ -32,78 +32,19 @@
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <LinearLayout
-        android:id="@+id/panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:background="@color/teal_200"
-        android:layout_gravity="bottom">
-
-        <TableLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TableRow>
-                <Button
-                    android:id="@+id/move_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Переместить">
-                </Button>
-
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Передать по FTP">
-                </Button>
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Загрузить в GitHub">
-                </Button>
-            </TableRow>
-
-
-        </TableLayout>
+    <include
+        android:id="@+id/local_select_panel"
+        layout="@layout/local_select_panel"></include>
+    <include
+        android:id="@+id/local_move_panel"
+        layout="@layout/local_move_panel"></include>
+    <include
+        android:id="@+id/ftp_select_panel"
+        layout="@layout/ftp_select_panel"></include>
 
 
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="LOWER PANEL"></TextView>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/second_panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:background="@color/teal_200"
-        android:layout_gravity="bottom">
-        <Button
-            android:id="@+id/move_here_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Переместить сюда"></Button>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Отмена"></Button>
-    </LinearLayout>
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
 
 
 

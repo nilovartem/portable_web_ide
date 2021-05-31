@@ -1,4 +1,4 @@
-package com.example.portable_web_ide.main;
+package com.example.portable_web_ide.main.local;
 
 import android.content.Context;
 import android.view.LayoutInflater;

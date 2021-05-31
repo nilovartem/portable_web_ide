@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/local_add_dialog_toolbar"></include>
+
+    <Button
+        android:id="@+id/create_folder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Новая папка"
+        android:drawableLeft="@drawable/ic_folder_24"
+        android:textColor="@color/black"
+        android:gravity="left|center_vertical"
+        android:backgroundTint="@color/white"
+        ></Button>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+
+
+
+</LinearLayout>
+

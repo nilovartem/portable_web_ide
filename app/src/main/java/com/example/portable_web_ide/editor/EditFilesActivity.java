@@ -4,12 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.example.portable_web_ide.MyApp;
 import com.example.portable_web_ide.R;
 import com.example.portable_web_ide.SettingsActivity;
 import com.example.portable_web_ide.editor.viewer.ViewerActivity;
-import com.example.portable_web_ide.main.LocalFragment;
-import com.example.portable_web_ide.main.MainActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -17,10 +14,8 @@ import androidx.activity.result.*;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.FileProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 
@@ -121,6 +116,7 @@ public class EditFilesActivity extends AppCompatActivity {
         if(id == R.id.action_view)
         {
             //Открываем браузер для просмотра файла
+            pagerAdapter.saveFiles();
             Log.i(APP_TAG,"Current page path " + pagerAdapter.getCurrentPagePath());
             Intent intent = new Intent(EditFilesActivity.this, ViewerActivity.class);
             intent.putExtra("path",pagerAdapter.getCurrentPagePath());

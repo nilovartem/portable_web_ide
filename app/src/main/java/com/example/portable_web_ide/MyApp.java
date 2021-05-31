@@ -12,6 +12,8 @@ public class MyApp{
 	private File ftpDirectory;
 	private File gitDirectory;
 
+
+
 	private static final MyApp ourInstance = new MyApp();
 
 
