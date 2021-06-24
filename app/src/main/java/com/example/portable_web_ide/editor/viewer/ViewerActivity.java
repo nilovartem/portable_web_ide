@@ -45,8 +45,7 @@ public class ViewerActivity extends AppCompatActivity {
         Bundle arguments = getIntent().getExtras();
         String path = arguments.getString("path");
         File file = new File(path);
-        webView.loadUrl("file:///"+file.getAbsolutePath());
-
+        webView.loadUrl("file:///" + file.getAbsolutePath());
 
 
     }

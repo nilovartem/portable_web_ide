@@ -22,18 +22,19 @@ public class FTPFileListAdapter extends ArrayAdapter<FTPFile> {
     private List<FTPFile> files;
 
 
-    public FTPFileListAdapter (Context context, int resource, List<FTPFile> files) {
+    public FTPFileListAdapter(Context context, int resource, List<FTPFile> files) {
         super(context, resource, files);
         this.files = files;
         this.layout = resource;
         this.inflater = LayoutInflater.from(context);
 
     }
+
     public View getView(int position, View convertView, ViewGroup parent) {
 
 
-        View view=inflater.inflate(this.layout, parent, false);
-        if(view !=null) {
+        View view = inflater.inflate(this.layout, parent, false);
+        if (view != null) {
             //ImageView flagView = (ImageView) view.findViewById(R.id.flag);
             //TextView nameView = (TextView) view.findViewById(R.id.name);
             //  if (mode == ListView.CHOICE_MODE_SINGLE) {

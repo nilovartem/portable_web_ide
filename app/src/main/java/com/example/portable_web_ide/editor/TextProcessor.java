@@ -37,7 +37,6 @@ public class TextProcessor extends androidx.appcompat.widget.AppCompatMultiAutoC
     private CharSequence enteredText;
 
 
-
     // TODO: подсветка выбранного цвета
     // TODO: подстветка особых ключевых слов
     // TODO: дополнение текста
@@ -52,21 +51,22 @@ public class TextProcessor extends androidx.appcompat.widget.AppCompatMultiAutoC
     public TextProcessor(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.addTextChangedListener(textWatcher);
-        PromptArrayAdapter promptArrayAdapter = new PromptArrayAdapter(MyApp.get(),R.id.textArea);
+        PromptArrayAdapter promptArrayAdapter = new PromptArrayAdapter(MyApp.get(), R.id.textArea);
         this.setAdapter(promptArrayAdapter);
         this.setTokenizer(new TextTokenizer());
         this.setThreshold(1);
         setDropDownAnchor(R.id.app_bar_layout);
 
         init();
+
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        setDropDownWidth(w*1/2);
-        setDropDownHeight(h*1/2);
+        setDropDownWidth(w * 1 / 2);
+        setDropDownHeight(h * 1 / 2);
 
         //update highlight
     }
@@ -83,8 +83,7 @@ public class TextProcessor extends androidx.appcompat.widget.AppCompatMultiAutoC
             //Log.i(APP_MODULE,s.toString());
 
 
-
-            if(s.length()>0) {
+            if (s.length() > 0) {
                 StringBuilder stringBuilder = new StringBuilder(s.toString());
                 int cursorPosition = getSelectionStart();
                 CharSequence enteredText = getText().toString();
@@ -142,7 +141,7 @@ public class TextProcessor extends androidx.appcompat.widget.AppCompatMultiAutoC
         @Override
         public void afterTextChanged(Editable s) {
 
-           highlightSyntax(s);
+            highlightSyntax(s);
 
 
         }
@@ -169,27 +168,26 @@ public class TextProcessor extends androidx.appcompat.widget.AppCompatMultiAutoC
 
             setDropDownHorizontalOffset(((int) x));
             setDropDownVerticalOffset((int) y);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
 
-    void processText(CharSequence text)
-    {
-     //   Log.i(APP_MODULE,"processText");
+    void processText(CharSequence text) {
+        //   Log.i(APP_MODULE,"processText");
         removeTextChangedListener(textWatcher);
         setText(text);
         addTextChangedListener(textWatcher);
     }
-    private void highlightSyntax(Editable sequence){
 
-    //   Log.i(APP_MODULE,getText().toString());
-       Matcher matcher = null;
+    private void highlightSyntax(Editable sequence) {
+
+        //Log.i(APP_MODULE,getText().toString());
+        Matcher matcher = null;
 
         //подсвечиваем теги HTML
         matcher = keyWordsHTML.matcher(getText());
-        matcher.region(0,sequence.length());
+        matcher.region(0, sequence.length());
         while (matcher.find()) {
             sequence.setSpan(
                     new ForegroundColorSpan(Color.parseColor("#2E64FE")),
@@ -200,7 +198,7 @@ public class TextProcessor extends androidx.appcompat.widget.AppCompatMultiAutoC
         }
         //проверяем на наличие синтаксиса PHP
         matcher = keyWordsPHP.matcher(getText());
-        matcher.region(0,sequence.length());
+        matcher.region(0, sequence.length());
         while (matcher.find()) {
             sequence.setSpan(
                     new ForegroundColorSpan(Color.parseColor("#7F0055")),
@@ -213,7 +211,7 @@ public class TextProcessor extends androidx.appcompat.widget.AppCompatMultiAutoC
 
         matcher = keyWordsCSS.matcher(getText());
 
-        matcher.region(0,sequence.length());
+        matcher.region(0, sequence.length());
         while (matcher.find()) {
             sequence.setSpan(
                     new ForegroundColorSpan(Color.parseColor("#B40431")),
@@ -223,6 +221,7 @@ public class TextProcessor extends androidx.appcompat.widget.AppCompatMultiAutoC
             );
         }
     }
+
     public void init() {
         paintText = new Paint();
         paintText.setColor(Color.GRAY);
@@ -233,22 +232,22 @@ public class TextProcessor extends androidx.appcompat.widget.AppCompatMultiAutoC
         paintIndent.setColor(getResources().getColor(R.color.indentColor));
         paintText.setStyle(Paint.Style.FILL);
 
-        this.setPadding(indentPadding,3,getPaddingRight(),0);
+        this.setPadding(indentPadding, 3, getPaddingRight(), 0);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         //Рисуем отступ
-        Rect field = new Rect(0,getScrollY(),indentPadding,getScrollY()+getHeight());
-        canvas.drawRect(field,paintIndent);
+        Rect field = new Rect(0, getScrollY(), indentPadding, getScrollY() + getHeight());
+        canvas.drawRect(field, paintIndent);
 
         int lineHeight = getLineHeight();
         int lineCount = getLineCount();
 
 
         for (int i = 0; i < lineCount; i++) {
-            float pad = paintText.measureText(String.valueOf(i+1));
-            canvas.drawText(String.valueOf(i + 1), indentPadding-pad-10, i * lineHeight + lineHeight, paintText);
+            float pad = paintText.measureText(String.valueOf(i + 1));
+            canvas.drawText(String.valueOf(i + 1), indentPadding - pad - 10, i * lineHeight + lineHeight, paintText);
         }
         //canvas.drawLine(100,getScrollY(),indentPadding,getScrollY()+getHeight(),paint );
         super.onDraw(canvas);

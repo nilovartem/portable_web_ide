@@ -9,12 +9,10 @@ public class TextTokenizer implements MultiAutoCompleteTextView.Tokenizer {
     @Override
     public int findTokenStart(CharSequence text, int cursor) {
         int i = cursor;
-        while (i>0 && !Token.contains(Character.toString(text.charAt(i-1))))
-        {
+        while (i > 0 && !Token.contains(Character.toString(text.charAt(i - 1)))) {
             i--;
         }
-        while (i<cursor && text.charAt(i) == ' ')
-        {
+        while (i < cursor && text.charAt(i) == ' ') {
             i++;
         }
         return i;
@@ -24,14 +22,10 @@ public class TextTokenizer implements MultiAutoCompleteTextView.Tokenizer {
     @Override
     public int findTokenEnd(CharSequence text, int cursor) {
         int i = cursor;
-        while (i<text.length())
-        {
-            if(Token.contains(Character.toString(text.charAt(i-1))))
-            {
+        while (i < text.length()) {
+            if (Token.contains(Character.toString(text.charAt(i - 1)))) {
                 return i;
-            }
-            else
-            {
+            } else {
                 i++;
             }
         }

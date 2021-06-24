@@ -41,6 +41,9 @@
     <include
         android:id="@+id/ftp_select_panel"
         layout="@layout/ftp_select_panel"></include>
+    <include
+        android:id="@+id/git_select_panel"
+        layout="@layout/git_select_panel"></include>
 
 
 

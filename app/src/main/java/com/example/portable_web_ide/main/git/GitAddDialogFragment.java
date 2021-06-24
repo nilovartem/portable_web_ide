@@ -1,4 +1,4 @@
-package com.example.portable_web_ide.main.ftp;
+package com.example.portable_web_ide.main.git;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,26 +13,20 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.example.portable_web_ide.R;
+import com.example.portable_web_ide.main.ftp.FtpAddDialogFragment;
 
-public class FtpAddDialogFragment extends DialogFragment {
-    private static final String MODULE_TAG = "FtpAddDialogFragment";
-    public String serverName;
-    public String hostName;
+public class GitAddDialogFragment extends DialogFragment {
+
+    private static final String MODULE_TAG = "GitAddDialogFragment";
     public String userName;
-    public String password;
-    public int port;
+    public String tokenValue;
 
-    public FtpAddDialogFragment() {
-
-    }
-
-    public static FtpAddDialogFragment newInstance() {
-        FtpAddDialogFragment fragment = new FtpAddDialogFragment();
+    public static GitAddDialogFragment newInstance() {
+        GitAddDialogFragment fragment = new GitAddDialogFragment();
         return fragment;
     }
 
@@ -40,16 +34,13 @@ public class FtpAddDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.ThemeOverlay_Material_ActionBar);
-        //setStyle(DialogFragment.STYLE_NORMAL, R.style.MY_DIALOG);
+
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        View root = inflater.inflate(R.layout.fragment_ftp_dialog, container, false);
-
-
+        View root = inflater.inflate(R.layout.fragment_git_add_dialog, container, false);
         Button buttonDone = root.findViewById(R.id.done);
         buttonDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,15 +48,10 @@ public class FtpAddDialogFragment extends DialogFragment {
                 Log.i(MODULE_TAG, "Кнопка Done");
                 try {
                     //сохраняем данные
-                    serverName = ((EditText) root.findViewById(R.id.server_name)).getText().toString();
-                    hostName = ((EditText) root.findViewById(R.id.host_name)).getText().toString();
                     userName = ((EditText) root.findViewById(R.id.user_name)).getText().toString();
-                    password = ((EditText) root.findViewById(R.id.password)).getText().toString();
-                    String portString = ((EditText) root.findViewById(R.id.port)).getText().toString();
-                    port = Integer.valueOf(portString);
+                    tokenValue = ((EditText) root.findViewById(R.id.token_value)).getText().toString();
                 } catch (Exception exception) {
                     Log.i(MODULE_TAG, exception.toString());
-
                     Log.i(MODULE_TAG, "Не введены все данные");
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle("Внимание");
@@ -119,6 +105,5 @@ public class FtpAddDialogFragment extends DialogFragment {
 
         return dialog;
     }
-
-
 }
+

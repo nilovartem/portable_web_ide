@@ -46,9 +46,9 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class LocalFragment extends Fragment implements DialogInterface.OnDismissListener{
+public class LocalFragment extends Fragment implements DialogInterface.OnDismissListener {
 
-    private static final String ARG_SECTION_NUMBER = "section_number";
+
     private static final String MODULE_TAG = "LocalFragment";
     private static final int LV_DEFAULT_MODE = 0;
     private static final int LV_MULTIPLE_SELECT_MODE = 1;
@@ -60,7 +60,7 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
     ArrayList<File> files;
     ArrayList<File> multipleSelectedFiles;
 
-    public LocalFragment(){
+    public LocalFragment() {
         multipleSelectedFiles = new ArrayList<>();
         listViewMode = LV_DEFAULT_MODE;
     }
@@ -75,7 +75,7 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
 */
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_local, container, false);
         View include = root.findViewById(R.id.include);
         Toolbar toolbar = include.findViewById(R.id.toolbar);
@@ -92,22 +92,21 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
 
                 FragmentManager fragmentManager = getChildFragmentManager();
                 fragmentDialog = LocalAddDialogFragment.newInstance(currentFile.getPath());
-                fragmentDialog.show(fragmentManager,"local_add_dialog_fragment");
+                fragmentDialog.show(fragmentManager, "local_add_dialog_fragment");
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Log.i(MODULE_TAG,"Текущий путь " + currentFile.getPath());
-                Log.i(MODULE_TAG,"Стандартный путь " + MyApp.getLocalDirectory().getPath());
+                Log.i(MODULE_TAG, "Текущий путь " + currentFile.getPath());
+                Log.i(MODULE_TAG, "Стандартный путь " + MyApp.getLocalDirectory().getPath());
 
-                if(!currentFile.equals(MyApp.getLocalDirectory())){
-                    Log.i(MODULE_TAG,"Директории разные!");
+                if (!currentFile.equals(MyApp.getLocalDirectory())) {
+                    Log.i(MODULE_TAG, "Директории разные!");
                     File parentFile = currentFile.getParentFile();
-                    SetListViewAdapter(parentFile,LV_DEFAULT_MODE);
-                    if(parentFile.equals(MyApp.getLocalDirectory()))
-                    {
+                    SetListViewAdapter(parentFile, LV_DEFAULT_MODE);
+                    if (parentFile.equals(MyApp.getLocalDirectory())) {
                         backButton.setEnabled(false);
                         backButton.setImageResource(R.drawable.ic_back_inactive_24);
                         homeButton.setEnabled(false);
@@ -124,7 +123,7 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
             @Override
             public void onClick(View v) {
 
-                Log.i(MODULE_TAG,"Выбрать");
+                Log.i(MODULE_TAG, "Выбрать");
                 multipleSelectedFiles.clear();
                 View view = getActivity().findViewById(R.id.local_select_panel);
                 view.setVisibility(view.isShown() ? View.GONE : View.VISIBLE);
@@ -139,13 +138,13 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
             @Override
             public void onClick(View v) {
 
-                if(!currentFile.equals(MyApp.getLocalDirectory())){
+                if (!currentFile.equals(MyApp.getLocalDirectory())) {
 
-                        SetListViewAdapter(MyApp.getLocalDirectory(),LV_DEFAULT_MODE);
-                        homeButton.setEnabled(false);
-                        homeButton.setImageResource(R.drawable.ic_home_inactive_24);
-                        backButton.setEnabled(false);
-                        backButton.setImageResource(R.drawable.ic_back_inactive_24);
+                    SetListViewAdapter(MyApp.getLocalDirectory(), LV_DEFAULT_MODE);
+                    homeButton.setEnabled(false);
+                    homeButton.setImageResource(R.drawable.ic_home_inactive_24);
+                    backButton.setEnabled(false);
+                    backButton.setImageResource(R.drawable.ic_back_inactive_24);
                 }
 
             }
@@ -153,8 +152,8 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
         //Выводим файлы в стандартное представление списка
         listView = root.findViewById(R.id.listView);
         File initialDirectory = new File(MyApp.getLocalDirectory().getPath());
-        Log.i(MODULE_TAG,"Начальная директория " + initialDirectory.getPath());
-        SetListViewAdapter(initialDirectory,LV_DEFAULT_MODE);
+        Log.i(MODULE_TAG, "Начальная директория " + initialDirectory.getPath());
+        SetListViewAdapter(initialDirectory, LV_DEFAULT_MODE);
         registerForContextMenu(listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -165,7 +164,7 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
 
                 switch (listViewMode) {
                     case LV_DEFAULT_MODE: {
-                        Log.i(MODULE_TAG,"DEFAULT MODE");
+                        Log.i(MODULE_TAG, "DEFAULT MODE");
 
                         if (selectedFile.isDirectory()) {
 
@@ -183,22 +182,29 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
 
                             //Открыть редактор файлов
                             Intent intent = new Intent(getActivity(), EditFilesActivity.class);
-                            Log.i(MODULE_TAG, "Открываем файл" + selectedFile.getPath());
-                            intent.putExtra("filePath", selectedFile.getPath());
-                            if (!ActiveFiles.getInstance().filesUri.contains(Uri.fromFile(selectedFile))) {
-                                ActiveFiles.getInstance().filesUri.add(Uri.fromFile(selectedFile));
-                                startActivity(intent);
-                            } else {
-                                Log.i(MODULE_TAG, "Внимание!!!Такой файл уже открыт!");
-                                startActivity(intent);
+
+                            if (!(selectedFile.getPath().contains(".rar") || selectedFile.getPath().contains(".zip"))) {
+
+
+                                Log.i(MODULE_TAG, "Открываем файл" + selectedFile.getPath());
+                                intent.putExtra("filePath", selectedFile.getPath());
+
+
+                                if (!ActiveFiles.getInstance().filesUri.contains(Uri.fromFile(selectedFile))) {
+                                    ActiveFiles.getInstance().filesUri.add(Uri.fromFile(selectedFile));
+                                    startActivity(intent);
+                                } else {
+                                    Log.i(MODULE_TAG, "Внимание!!!Такой файл уже открыт!");
+                                    startActivity(intent);
+                                }
                             }
                         }
                         break;
                     }
 
                     case LV_MULTIPLE_SELECT_MODE: {
-                        Log.i(MODULE_TAG,"MULTIPLE MODE");
-                       CheckBox checkBox = view.findViewById(R.id.checkbox);
+                        Log.i(MODULE_TAG, "MULTIPLE MODE");
+                        CheckBox checkBox = view.findViewById(R.id.checkbox);
 
                         if (!checkBox.isChecked()) {
                             checkBox.setChecked(true);
@@ -211,13 +217,13 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
                             checkBox.setChecked(false);
                         }
                         Button moveButton = getActivity().findViewById(R.id.move_button);
-                        moveButton.setEnabled(multipleSelectedFiles.size()!=0 ? true : false);
+                        moveButton.setEnabled(multipleSelectedFiles.size() != 0 ? true : false);
                         break;
 
                     }
                     case LV_MOVE_MODE: {
                         //Выбор места для переноса файла
-                        Log.i(MODULE_TAG,"MOVE MODE");
+                        Log.i(MODULE_TAG, "MOVE MODE");
                         if (selectedFile.isDirectory()) {
                             SetListViewAdapter(selectedFile, LV_MOVE_MODE);
 
@@ -230,7 +236,7 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
 
                         }
 
-                        Log.i(MODULE_TAG,"Выбран" + selectedFile.getName());
+                        Log.i(MODULE_TAG, "Выбран" + selectedFile.getName());
                         break;
                     }
                 }
@@ -241,7 +247,7 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
         moveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(MODULE_TAG,"Нажата кнопка Переместить");
+                Log.i(MODULE_TAG, "Нажата кнопка Переместить");
                 SetListViewAdapter(currentFile, LV_MOVE_MODE);
                 selectButton.setEnabled(false);
                 selectButton.setText("Выбрать");
@@ -254,6 +260,7 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
 
             }
         });
+        /*
         Button transferButton = getActivity().findViewById(R.id.transfer_ftp);
         transferButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -261,22 +268,23 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
 
                 //TODO:вызвать метод вставки в ftp_fragment
             }
-        });
+        });*/
         Button moveHere = getActivity().findViewById(R.id.move_here);
         moveHere.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(MODULE_TAG,"Нажата кнопка переместить сюда");
+                Log.i(MODULE_TAG, "Нажата кнопка переместить сюда");
 
-                for (File selectedFile:multipleSelectedFiles
-                     ) {
+                for (File selectedFile : multipleSelectedFiles
+                ) {
                     try {
-                        moveFile(selectedFile,currentFile);
+                        ActiveFiles activeFiles = ActiveFiles.getInstance();
+                        moveFile(selectedFile, currentFile, activeFiles);
                     } catch (IOException exception) {
                         exception.printStackTrace();
                     }
                 }
-                SetListViewAdapter(currentFile,LV_DEFAULT_MODE);
+                SetListViewAdapter(currentFile, LV_DEFAULT_MODE);
                 View secondPanel = getActivity().findViewById(R.id.local_move_panel);
                 secondPanel.setVisibility(View.GONE);
                 selectButton.setEnabled(true);
@@ -287,9 +295,9 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
         cancelMove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(MODULE_TAG,"Нажата кнопка Отмена");
+                Log.i(MODULE_TAG, "Нажата кнопка Отмена");
                 multipleSelectedFiles.clear();
-                SetListViewAdapter(currentFile,LV_DEFAULT_MODE);
+                SetListViewAdapter(currentFile, LV_DEFAULT_MODE);
                 View secondPanel = getActivity().findViewById(R.id.local_move_panel);
                 secondPanel.setVisibility(View.GONE);
                 selectButton.setEnabled(true);
@@ -298,26 +306,41 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
 
         return root;
     }
-    public void moveFile(File file,File previousDirectory) throws IOException {
-        if(file.isFile())
-        {
-            File destFile = new File(previousDirectory.getPath()+"/"+file.getName());
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SetListViewAdapter(currentFile, listView.getChoiceMode() == ListView.CHOICE_MODE_SINGLE ? LV_DEFAULT_MODE : LV_MULTIPLE_SELECT_MODE);
+    }
+
+    public void moveFile(File file, File previousDirectory, ActiveFiles activeFiles) throws IOException {
+        if (file.isFile()) {
+            Uri fileUri = Uri.fromFile(file);
+
+            File destFile = new File(previousDirectory.getPath() + "/" + file.getName());
+            //Предотвращение ошибки с несуществующими вкладками
+            if (activeFiles.filesUri.contains(fileUri)) {
+                int uriIndex = activeFiles.filesUri.indexOf(fileUri);
+                activeFiles.filesUri.set(uriIndex, Uri.fromFile(destFile));
+
+            }
             file.renameTo(destFile);
+
         }
-        if(file.isDirectory())
-        {
-            File destFile = new File(previousDirectory.getPath()+"/"+file.getName());
+        if (file.isDirectory()) {
+            File destFile = new File(previousDirectory.getPath() + "/" + file.getName());
             file.renameTo(destFile);
             List<File> directoryFiles = Arrays.asList(destFile.listFiles());
-            for (File directoryFile:directoryFiles
+            for (File directoryFile : directoryFiles
             ) {
-                moveFile(directoryFile,destFile);
+                moveFile(directoryFile, destFile, activeFiles);
             }
 
 
         }
     }
-    void createFileDialog(String type){
+
+    void createFileDialog(String type) {
 
         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 
@@ -334,22 +357,20 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
                 //удалить всякие спецсимволы, типа точек, слешей и тд.
                 File file = new File(path + "/" + fileName);
 
-                if(type == "folder")
-                {
-                    Log.i(MODULE_TAG,"Диалог - новая папка " + file.getPath());
+                if (type == "folder") {
+                    Log.i(MODULE_TAG, "Диалог - новая папка " + file.getPath());
                     file.mkdir();
                 }
-                if(type == "file")
-                {
+                if (type == "file") {
                     try {
-                        Log.i(MODULE_TAG,"Диалог - новый файл " + file.getPath());
+                        Log.i(MODULE_TAG, "Диалог - новый файл " + file.getPath());
                         file.createNewFile();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
                 //обновляем коллекцию
-                SetListViewAdapter(file.getParentFile(),LV_DEFAULT_MODE);
+                SetListViewAdapter(file.getParentFile(), LV_DEFAULT_MODE);
 
             }
         });
@@ -365,17 +386,16 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
     @Override
     public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        getActivity().getMenuInflater().inflate(R.menu.menu_context_file,menu);
+        getActivity().getMenuInflater().inflate(R.menu.menu_context_file, menu);
     }
+
     @Override
-    public boolean onContextItemSelected(MenuItem item)
-    {
+    public boolean onContextItemSelected(MenuItem item) {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 
-        switch (item.getItemId())
-        {
-            case R.id.action_rename_file:{
-                Log.i(MODULE_TAG,"Переименовать файл " + String.valueOf(info.position));
+        switch (item.getItemId()) {
+            case R.id.action_rename_file: {
+                Log.i(MODULE_TAG, "Переименовать файл " + String.valueOf(info.position));
 
                 AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 
@@ -393,25 +413,34 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
 
                         ArrayList<String> arrayList = new ArrayList<>(Arrays.asList(path.split("/")));
                         arrayList.remove(0);
-                        arrayList.set(arrayList.size()-1,value);
+                        arrayList.set(arrayList.size() - 1, value);
                         String newPath = new String();
-                        for (String s:arrayList
+                        for (String s : arrayList
                         ) {
                             Log.i(MODULE_TAG, "Символ" + s);
                             newPath += "/" + s;
                         }
-                        Log.i(MODULE_TAG,"Новая строка " + newPath);
+                        Log.i(MODULE_TAG, "Новая строка " + newPath);
                         //Убираем пробелы(на всякий случай)
                         newPath.trim();
+                        File previousFile = files.get(info.position);
                         File renamedFile = new File(newPath);
                         files.get(info.position).renameTo(renamedFile);
+                        ActiveFiles activeFiles = ActiveFiles.getInstance();
+                        if (activeFiles.filesUri.contains(Uri.fromFile(previousFile))) {
+                            int uriIndex = activeFiles.filesUri.indexOf(Uri.fromFile(previousFile));
+                            activeFiles.filesUri.set(uriIndex, Uri.fromFile(renamedFile));
+
+                        }
+
+
                         //обновляем коллекцию
-                        SetListViewAdapter(files.get(info.position).getParentFile(),LV_DEFAULT_MODE);
+                        SetListViewAdapter(files.get(info.position).getParentFile(), LV_DEFAULT_MODE);
 
                     }
                 });
 
-                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // Canceled.
                     }
@@ -419,7 +448,7 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
                 alert.show();
                 return true;
             }
-            case R.id.action_delete_file:{
+            case R.id.action_delete_file: {
 
                 /*Старый метод
                 Log.i(MODULE_TAG,"Удалить файл" + String.valueOf(info.position));
@@ -430,34 +459,32 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
                 File parentFile = files.get(info.position).getParentFile();
                 ActiveFiles activeFiles = ActiveFiles.getInstance();
                 try {
-                    DeleteFile(files.get(info.position),activeFiles);
+                    DeleteFile(files.get(info.position), activeFiles);
                 } catch (IOException exception) {
                     exception.printStackTrace();
                 }
-                SetListViewAdapter(parentFile,LV_DEFAULT_MODE);
+                SetListViewAdapter(parentFile, LV_DEFAULT_MODE);
             }
-            default:{
+            default: {
                 return super.onContextItemSelected(item);
             }
         }
     }
-    public void DeleteFile(File file,ActiveFiles activeFiles) throws IOException {
-        if(file.isFile())
-        {
+
+    public void DeleteFile(File file, ActiveFiles activeFiles) throws IOException {
+        if (file.isFile()) {
             Uri fileUri = Uri.fromFile(file);
-            if(activeFiles.filesUri.contains(fileUri))
-            {
+            if (activeFiles.filesUri.contains(fileUri)) {
                 activeFiles.filesUri.remove(fileUri);
             }
             file.delete();
         }
-        if(file.isDirectory())
-        {
+        if (file.isDirectory()) {
             List<File> directoryFiles = Arrays.asList(file.listFiles());
-            for (File directoryFile:directoryFiles
+            for (File directoryFile : directoryFiles
             ) {
 
-                DeleteFile(directoryFile,activeFiles);
+                DeleteFile(directoryFile, activeFiles);
             }
 
             file.delete();
@@ -466,39 +493,38 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
     }
 
 
-    public void SetListViewAdapter(File fileDirectory, int mode){
+    public void SetListViewAdapter(File fileDirectory, int mode) {
 
         currentFile = fileDirectory;
 
         files = new ArrayList<>(Arrays.asList(fileDirectory.listFiles()));
         LocalFileListAdapter fileListAdapter = null;
-        switch (mode)
-        {
-            case LV_DEFAULT_MODE:{
+        switch (mode) {
+            case LV_DEFAULT_MODE: {
 
                 registerForContextMenu(listView);
                 listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-                fileListAdapter = new LocalFileListAdapter(MyApp.get(),R.layout.text_row_item,files);
+                fileListAdapter = new LocalFileListAdapter(MyApp.get(), R.layout.text_row_item, files);
                 break;
 
             }
-            case LV_MULTIPLE_SELECT_MODE:{
+            case LV_MULTIPLE_SELECT_MODE: {
                 unregisterForContextMenu(listView);
                 listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-                fileListAdapter = new LocalFileListAdapter(MyApp.get(), R.layout.checkable_text_row_item,files);
+                fileListAdapter = new LocalFileListAdapter(MyApp.get(), R.layout.checkable_text_row_item, files);
                 break;
 
             }
-            case LV_MOVE_MODE:{
+            case LV_MOVE_MODE: {
                 unregisterForContextMenu(listView);
                 listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-                fileListAdapter = new LocalFileListAdapter(MyApp.get(),R.layout.text_row_item,files);
+                fileListAdapter = new LocalFileListAdapter(MyApp.get(), R.layout.text_row_item, files);
                 break;
 
             }
         }
         listViewMode = mode;
-        Log.i(MODULE_TAG,"Режим"+ String.valueOf(mode));
+        Log.i(MODULE_TAG, "Режим" + String.valueOf(mode));
 
 
         //old
@@ -509,6 +535,6 @@ public class LocalFragment extends Fragment implements DialogInterface.OnDismiss
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-       SetListViewAdapter(fragmentDialog.newFile.getParentFile(),LV_DEFAULT_MODE);
+        SetListViewAdapter(fragmentDialog.newFile.getParentFile(), LV_DEFAULT_MODE);
     }
 }

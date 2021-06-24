@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/ftp_add_dialog_toolbar"></include>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/black"
+            android:showDividers="middle">
+        <TableRow>
+            <TextView android:text="Имя пользователя"></TextView>
+            <EditText android:id="@+id/user_name"></EditText>
+        </TableRow>
+        <TableRow>
+            <TextView android:text="Личный токен доступа"></TextView>
+            <EditText android:id="@+id/token_value"></EditText>
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>

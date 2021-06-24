@@ -43,7 +43,8 @@ public class FilesPagerAdapter extends FragmentStateAdapter {
 
         TabLayout tabLayout = fragmentActivity.findViewById(R.id.tab_layout);
         new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                 tab.setText(pageTitles.get(position));
             }
         }).attach();
@@ -54,17 +55,13 @@ public class FilesPagerAdapter extends FragmentStateAdapter {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
             }
 
-
             @Override
             public void onPageSelected(int position) {
 
-                try{
-                Log.i(APP_TAG,"Выбрана страница " + pageTitles.get(position));
-
-
-                super.onPageSelected(position);
-                }
-                catch (Throwable e){
+                try {
+                    Log.i(APP_TAG, "Выбрана страница " + pageTitles.get(position));
+                    super.onPageSelected(position);
+                } catch (Throwable e) {
 
                 }
 
@@ -75,11 +72,7 @@ public class FilesPagerAdapter extends FragmentStateAdapter {
                 super.onPageScrollStateChanged(state);
             }
         });
-
-        Log.i(APP_TAG,"Конструктор");
-
-
-
+        Log.i(APP_TAG, "Конструктор");
     }
     /*
     public SectionsPagerAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
@@ -127,41 +120,36 @@ public class FilesPagerAdapter extends FragmentStateAdapter {
             Log.i(APP_TAG,a);
 
         }*/
-       // Log.i(APP_TAG,String.valueOf(pages.size()))};
+    // Log.i(APP_TAG,String.valueOf(pages.size()))};
 
-    public void addPages(){
+    public void addPages() {
 
 
         ArrayList<Uri> filesUri = ActiveFiles.getInstance().filesUri;
 
-        for (Uri uri :filesUri
-             ) {
-
+        for (Uri uri : filesUri
+        ) {
             String filename = new File(uri.getPath()).getName();
-
             String realPath = uri.getPath();
-
-            FileFragment fragment = FileFragment.newInstance(pages.size(),realPath);
+            FileFragment fragment = FileFragment.newInstance(pages.size(), realPath);
             pages.add(fragment);
             pageTitles.add(filename);
             pagesId.add((long) (fragment.hashCode()));
             pagesUri.add(uri);
             pagerAdapter.notifyDataSetChanged();
-            viewPager.setCurrentItem(pages.size()-1);
+            viewPager.setCurrentItem(pages.size() - 1);
         }
         //viewPager.setCurrentItem(0);
-        Log.i(APP_TAG,"Установить страницу");
-
-
+        Log.i(APP_TAG, "Установить страницу");
 
 
     }
-    public void saveFiles()
-    {
-        for (FileFragment fileFragment:pages
-             ) {
 
-             fileFragment.saveFile();
+    public void saveFiles() {
+        for (FileFragment fileFragment : pages
+        ) {
+
+            fileFragment.saveFile();
 
 
         }
@@ -186,42 +174,47 @@ public class FilesPagerAdapter extends FragmentStateAdapter {
             }
         }
     }
-    public void closePage(){
-        int position = viewPager.getCurrentItem();
-        Log.i(APP_TAG,"position " + position);
 
-        if(pageTitles.size() != 0 && pageTitles.get(position) != null) {
+    public void closePage() {
+        int position = viewPager.getCurrentItem();
+        Log.i(APP_TAG, "Позиция:" + position);
+
+        if (pageTitles.size() != 0 && pageTitles.get(position) != null) {
+
             FileFragment fragment = pages.get(position);
             Uri currentUri = pagesUri.get(position);
-            //Log.i(APP_TAG,"В Н И М А Н И Е " + currentFile.getPath());
             ActiveFiles.getInstance().filesUri.remove(currentUri);
             fragment.saveFile();
+
             pageTitles.remove(position);
             pagesId.remove(position);
             pages.remove(position);
+
             this.notifyDataSetChanged();
         }
-        Log.i(APP_TAG,"CLOSE PAGE");
+        Log.i(APP_TAG, "CLOSE PAGE");
     }
-    public String getCurrentPagePath(){
+
+    public String getCurrentPagePath() {
 
         int position = viewPager.getCurrentItem();
         FileFragment fragment = pages.get(position);
         return fragment.getFilePath();
-
     }
+
     @NonNull
     @Override
     public FileFragment createFragment(int position) {
 
-        Log.i(APP_TAG,"CreateFragment");
+        Log.i(APP_TAG, "CreateFragment");
 
-        Log.i(APP_TAG,"Position " + String.valueOf(position));
+        Log.i(APP_TAG, "Position " + String.valueOf(position));
 
         return pages.get(position);
-       // return PlaceholderFragment.newInstance(position);
+        // return PlaceholderFragment.newInstance(position);
 
     }
+
     /*
     @Override
     public long getItemId(int position)

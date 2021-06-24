@@ -29,21 +29,22 @@ public class LocalFileListAdapter extends ArrayAdapter<File> {
         this.inflater = LayoutInflater.from(context);
 
     }
+
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        View view=inflater.inflate(this.layout, parent, false);
-        if(view !=null) {
+        View view = inflater.inflate(this.layout, parent, false);
+        if (view != null) {
             //ImageView flagView = (ImageView) view.findViewById(R.id.flag);
             //TextView nameView = (TextView) view.findViewById(R.id.name);
-          //  if (mode == ListView.CHOICE_MODE_SINGLE) {
-                TextView textView = (TextView) view.findViewById(R.id.textView);
-                textView.setText(files.get(position).getName());
-           // }
-           // if (mode == ListView.CHOICE_MODE_MULTIPLE) {
+            //  if (mode == ListView.CHOICE_MODE_SINGLE) {
+            TextView textView = (TextView) view.findViewById(R.id.textView);
+            textView.setText(files.get(position).getName());
+            // }
+            // if (mode == ListView.CHOICE_MODE_MULTIPLE) {
 
-                //CheckedTextView checkedTextView = (CheckedTextView) view.findViewById(R.id.checked_text_view);
-               // checkedTextView.setText(files.get(position).getName());
-          //  }
+            //CheckedTextView checkedTextView = (CheckedTextView) view.findViewById(R.id.checked_text_view);
+            // checkedTextView.setText(files.get(position).getName());
+            //  }
             ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
             if (files.get(position).isDirectory()) {
                 imageView.setImageResource(R.drawable.ic_folder_24);

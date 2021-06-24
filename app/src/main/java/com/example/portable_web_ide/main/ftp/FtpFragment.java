@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.portable_web_ide.MyApp;
 import com.example.portable_web_ide.R;
@@ -22,7 +23,9 @@ import com.example.portable_web_ide.Section;
 import com.example.portable_web_ide.main.local.LocalAddDialogFragment;
 import com.example.portable_web_ide.main.local.LocalFileListAdapter;
 
+
 import org.apache.commons.net.ftp.FTPFile;
+import org.kohsuke.github.GitHub;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,7 +53,7 @@ public class FtpFragment extends Fragment implements DialogInterface.OnDismissLi
     ArrayList<FTPFile> multipleSelectedFiles;
     ArrayList<Server> multipleSelectedServers;
     Stack<FTPFile> navigationStack;
-    
+
     private static final int LV_DEFAULT_MODE = 0;
     private static final int LV_MULTIPLE_SELECT_MODE = 1;
     private static final int LV_MOVE_MODE = 2;
@@ -61,17 +64,6 @@ public class FtpFragment extends Fragment implements DialogInterface.OnDismissLi
         multipleSelectedServers = new ArrayList<>();
         navigationStack = new Stack<>();
     }
-
-
-    /*
-    public static FtpFragment newInstance(String param1, String param2) {
-        FtpFragment fragment = new FtpFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,8 +99,8 @@ public class FtpFragment extends Fragment implements DialogInterface.OnDismissLi
             List<FTPFile> directoryFiles = ftpManager.getFileList(file.getName());
             for (FTPFile directoryFile:directoryFiles
             ) {
-                DownloadFile(directoryFile,directory.getPath());
-            }
+            DownloadFile(directoryFile,directory.getPath());
+        }
 
         }
     }
@@ -118,8 +110,8 @@ public class FtpFragment extends Fragment implements DialogInterface.OnDismissLi
         servers = new ArrayList<>();
         files = new ArrayList<>();
         currentAdapter = SERVERS_ADAPTER;
-
         View root = inflater.inflate(R.layout.fragment_ftp, container, false);
+
         Button downloadButton = getActivity().findViewById(R.id.download);
         downloadButton.setEnabled(false);
         downloadButton.setOnClickListener(new View.OnClickListener() {
@@ -129,14 +121,13 @@ public class FtpFragment extends Fragment implements DialogInterface.OnDismissLi
                 {
                     case FILES_ADAPTER:{
                         for (FTPFile file:multipleSelectedFiles
-                             ) {
-                            try {
-                                DownloadFile(file,null);
-                            } catch (IOException exception) {
-                                exception.printStackTrace();
-                            }
+                        ) {
+                        try {
+                            DownloadFile(file,null);
+                        } catch (IOException exception) {
+                            exception.printStackTrace();
                         }
-
+                    }
                         break;
                     }
                 }
@@ -148,7 +139,6 @@ public class FtpFragment extends Fragment implements DialogInterface.OnDismissLi
             public void onClick(View v) {
                 switch (currentAdapter){
                     case SERVERS_ADAPTER:{
-
                         FragmentManager fragmentManager = getChildFragmentManager();
                         addServerfragmentDialog = FtpAddDialogFragment.newInstance();
                         addServerfragmentDialog.show(fragmentManager,"ftp_dialog_fragment");
@@ -157,7 +147,6 @@ public class FtpFragment extends Fragment implements DialogInterface.OnDismissLi
                     case FILES_ADAPTER:{
                         FragmentManager fragmentManager = getChildFragmentManager();
                         addFilefragmentDialog = FTPAddFileDialogFragment.newInstance(currentFile==null?null:currentFile.getName());
-
                         addFilefragmentDialog.show(fragmentManager,"local_add_dialog_fragment");
                         break;
                     }
@@ -204,11 +193,10 @@ public class FtpFragment extends Fragment implements DialogInterface.OnDismissLi
             @Override
             public void onClick(View v) {
 
-
                 if(!navigationStack.isEmpty()) {
                     navigationStack.pop();
                     if (!navigationStack.isEmpty()) {
-                           FTPFile file = navigationStack.pop();
+                        FTPFile file = navigationStack.pop();
                         try {
                             SetFileAdapter(file,LV_DEFAULT_MODE);
                         } catch (IOException exception) {
@@ -222,8 +210,6 @@ public class FtpFragment extends Fragment implements DialogInterface.OnDismissLi
                         //поменять картинку кнопки на серый
                         backButton.setEnabled(false);
                     }
-
-
                 }
                 else{
                     ftpManager.ftpDisconnect();
@@ -234,95 +220,92 @@ public class FtpFragment extends Fragment implements DialogInterface.OnDismissLi
 
             }
         });
-
         listView = root.findViewById(R.id.listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-               if(servers.size()!=0)
-               {
-                   switch (currentAdapter) {
-                       case SERVERS_ADAPTER: {
-                           Server selectedServer = servers.get(position);
-                           ftpManager.ftpConnect(selectedServer);
-                           switch (listViewMode) {
-                               case LV_DEFAULT_MODE: {
-                                   Log.i(MODULE_TAG,"Дефолтный сервак");
-                                   try {
-                                       SetFileAdapter(null,LV_DEFAULT_MODE);
-                                       backButton.setEnabled(true);
-                                   } catch (IOException exception) {
-                                       exception.printStackTrace();
-                                   }
-                                   break;
-                               }
+                if(servers.size()!=0)
+                {
+                    switch (currentAdapter) {
+                        case SERVERS_ADAPTER: {
+                            Server selectedServer = servers.get(position);
+                            ftpManager.ftpConnect(selectedServer);
+                            switch (listViewMode) {
+                                case LV_DEFAULT_MODE: {
+                                    Log.i(MODULE_TAG,"Дефолтный сервак");
+                                    try {
+                                        SetFileAdapter(null,LV_DEFAULT_MODE);
+                                        backButton.setEnabled(true);
+                                    } catch (IOException exception) {
+                                        exception.printStackTrace();
+                                    }
+                                    break;
+                                }
 
-                               case LV_MULTIPLE_SELECT_MODE: {
+                                case LV_MULTIPLE_SELECT_MODE: {
 
-                                   Log.i(MODULE_TAG,"MULTIPLE MODE");
+                                    Log.i(MODULE_TAG,"MULTIPLE MODE");
+                                    CheckBox checkBox = view.findViewById(R.id.checkbox);
+                                    if (!checkBox.isChecked()) {
+                                        checkBox.setChecked(true);
+                                        Log.i(MODULE_TAG, "Выбран файл " + selectedServer.getHostName());
+                                        multipleSelectedServers.add(selectedServer);
 
-                                   CheckBox checkBox = view.findViewById(R.id.checkbox);
+                                    } else {
+                                        Log.i(MODULE_TAG, "Значение выбора снято с файла " + selectedServer.getHostName());
+                                        multipleSelectedServers.remove(selectedServer);
+                                        checkBox.setChecked(false);
+                                    }
+                                    //Button moveButton = getActivity().findViewById(R.id.move);
+                                    // moveButton.setEnabled(multipleSelectedServers.size()!=0 ? true : false);
+                                    break;
 
-                                   if (!checkBox.isChecked()) {
-                                       checkBox.setChecked(true);
-                                       Log.i(MODULE_TAG, "Выбран файл " + selectedServer.getHostName());
-                                       multipleSelectedServers.add(selectedServer);
+                                }
+                            }
 
-                                   } else {
-                                       Log.i(MODULE_TAG, "Значение выбора снято с файла " + selectedServer.getHostName());
-                                       multipleSelectedServers.remove(selectedServer);
-                                       checkBox.setChecked(false);
-                                   }
-                                   //Button moveButton = getActivity().findViewById(R.id.move);
-                                  // moveButton.setEnabled(multipleSelectedServers.size()!=0 ? true : false);
-                                   break;
+                            break;
+                        }
+                        case FILES_ADAPTER: {
+                            FTPFile selectedFile = files.get(position);
+                            switch (listViewMode) {
+                                case LV_DEFAULT_MODE: {
 
-                               }
-                           }
+                                    if (selectedFile.isDirectory()) {
+                                        try {
+                                            SetFileAdapter(selectedFile, LV_DEFAULT_MODE);
 
-                           break;
-                       }
-                       case FILES_ADAPTER: {
-                           FTPFile selectedFile = files.get(position);
-                           switch (listViewMode) {
-                               case LV_DEFAULT_MODE: {
+                                            backButton.setEnabled(true);
+                                        } catch (IOException exception) {
+                                            exception.printStackTrace();
+                                        }
+                                    }
+                                    break;
+                                }
+                                case LV_MULTIPLE_SELECT_MODE: {
+                                    Log.i(MODULE_TAG,"MULTIPLE MODE");
+                                    CheckBox checkBox = view.findViewById(R.id.checkbox);
 
-                                   if (selectedFile.isDirectory()) {
-                                       try {
-                                           SetFileAdapter(selectedFile, LV_DEFAULT_MODE);
+                                    if (!checkBox.isChecked()) {
+                                        checkBox.setChecked(true);
+                                        Log.i(MODULE_TAG, "Выбран файл " + selectedFile.getName());
+                                        multipleSelectedFiles.add(selectedFile);
 
-                                           backButton.setEnabled(true);
-                                       } catch (IOException exception) {
-                                           exception.printStackTrace();
-                                       }
-                                   }
-                                   break;
-                               }
-                               case LV_MULTIPLE_SELECT_MODE: {
-                                   Log.i(MODULE_TAG,"MULTIPLE MODE");
-                                   CheckBox checkBox = view.findViewById(R.id.checkbox);
+                                    } else {
+                                        Log.i(MODULE_TAG, "Значение выбора снято с файла " + selectedFile.getName());
+                                        multipleSelectedFiles.remove(selectedFile);
+                                        checkBox.setChecked(false);
+                                    }
+                                    downloadButton.setEnabled(multipleSelectedFiles.size()!=0 ? true : false);
+                                    break;
 
-                                   if (!checkBox.isChecked()) {
-                                       checkBox.setChecked(true);
-                                       Log.i(MODULE_TAG, "Выбран файл " + selectedFile.getName());
-                                       multipleSelectedFiles.add(selectedFile);
+                                }
+                            }
+                            break;
 
-                                   } else {
-                                       Log.i(MODULE_TAG, "Значение выбора снято с файла " + selectedFile.getName());
-                                       multipleSelectedFiles.remove(selectedFile);
-                                       checkBox.setChecked(false);
-                                   }
-                                   downloadButton.setEnabled(multipleSelectedFiles.size()!=0 ? true : false);
-                                   break;
-
-                               }
-                           }
-                           break;
-
-                       }
-                   }
-               }
+                        }
+                    }
+                }
 
             }
         });
@@ -330,6 +313,25 @@ public class FtpFragment extends Fragment implements DialogInterface.OnDismissLi
         return root;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        switch (currentAdapter) {
+            case SERVERS_ADAPTER: {
+                SetServerAdapter(currentServer, listView.getChoiceMode() == ListView.CHOICE_MODE_SINGLE ? LV_DEFAULT_MODE : LV_MULTIPLE_SELECT_MODE);
+                break;
+            }
+            case FILES_ADAPTER: {
+
+                try {
+                    SetFileAdapter(currentFile, listView.getChoiceMode() == ListView.CHOICE_MODE_SINGLE ? LV_DEFAULT_MODE : LV_MULTIPLE_SELECT_MODE);
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+                break;
+            }
+        }
+    }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
@@ -348,8 +350,22 @@ public class FtpFragment extends Fragment implements DialogInterface.OnDismissLi
                 if (status) {
                     Log.i(MODULE_TAG, "Ура");
                     Log.i(MODULE_TAG, "Дефолтный путь " + null);
-                    servers.add(server);
-                    SetServerAdapter(server, LV_DEFAULT_MODE);
+                    if(servers.contains(server))
+                    {
+                        Log.i(MODULE_TAG,"SERVER_CONTAINS");
+                        //Написать, что сервер уже существует
+                        CharSequence text = "Hello toast!";
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(MyApp.get(), text, duration);
+                        toast.show();
+                    }
+                    else
+                    {
+                        Log.i(MODULE_TAG,"!SERVER_CONTAINS");
+                        servers.add(server);
+                        SetServerAdapter(server, LV_DEFAULT_MODE);
+                    }
+
                 } else {
                     Log.i(MODULE_TAG, "Подключение не удалось(");
                 }
@@ -377,7 +393,7 @@ public class FtpFragment extends Fragment implements DialogInterface.OnDismissLi
 
 
 
-            //SetFileAdapter(addFilefragmentDialog.newFile.getParentFile(),LV_DEFAULT_MODE);
+        //SetFileAdapter(addFilefragmentDialog.newFile.getParentFile(),LV_DEFAULT_MODE);
 
     }
     public void SetServerAdapter(Server selectedServer,int mode){
@@ -393,7 +409,6 @@ public class FtpFragment extends Fragment implements DialogInterface.OnDismissLi
                 listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
                 serverListAdapter = new FTPServerListAdapter(MyApp.get(),R.layout.text_row_item,servers);
                 break;
-
             }
             case LV_MULTIPLE_SELECT_MODE:{
                 //unregisterForContextMenu(listView);
@@ -401,7 +416,6 @@ public class FtpFragment extends Fragment implements DialogInterface.OnDismissLi
                 listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
                 serverListAdapter = new FTPServerListAdapter(MyApp.get(),R.layout.checkable_text_row_item,servers);
                 break;
-
             }
             case LV_MOVE_MODE:{
                 Log.i(MODULE_TAG, "Режим перемещения");
@@ -409,7 +423,6 @@ public class FtpFragment extends Fragment implements DialogInterface.OnDismissLi
                 listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
                 serverListAdapter = new FTPServerListAdapter(MyApp.get(),R.layout.checkable_text_row_item,servers);
                 break;
-
             }
         }
         listViewMode = mode;
@@ -429,7 +442,6 @@ public class FtpFragment extends Fragment implements DialogInterface.OnDismissLi
         {
             files = ftpManager.getFileList(currentFile.getName());
         }
-
         switch (mode)
         {
             case LV_DEFAULT_MODE:{

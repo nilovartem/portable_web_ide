@@ -9,9 +9,10 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.portable_web_ide.MyApp;
 import com.example.portable_web_ide.R;
-import com.example.portable_web_ide.Section;
 import com.example.portable_web_ide.main.ftp.FtpFragment;
+import com.example.portable_web_ide.main.git.GitFragment;
 import com.example.portable_web_ide.main.local.LocalFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -36,15 +37,9 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
     public SectionsPagerAdapter(FragmentActivity fragmentActivity) {
         super(fragmentActivity);
 
-
         pagerAdapter = this;
-
         viewPager = fragmentActivity.findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);
-        if(viewPager != null)
-        {
-            Log.i(MODULE_TAG,"NOT NULL");
-        }
 
         TabLayout tabLayout = fragmentActivity.findViewById(R.id.tab_layout);
         new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
@@ -57,6 +52,7 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+
             }
 
             @Override
@@ -64,7 +60,11 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
 
                 try{
                     Log.i(MODULE_TAG,"Выбрана страница " + TAB_TITLES[position]);
+
                     super.onPageSelected(position);
+
+
+
                 }
                 catch (Throwable e){
 

@@ -43,8 +43,7 @@ public class MainActivity extends AppCompatActivity {
         initToolbar();
 
         MyApp singletonExample = MyApp.getInstance();
-        if(MyApp.get() == null)
-        {
+        if (MyApp.get() == null) {
             singletonExample.initContext(getApplicationContext());
         }
         setInitialDirectories();
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    protected void setInitialDirectories(){
+    protected void setInitialDirectories() {
         MyApp singletonExample = MyApp.getInstance();
         //проверка на существование трех стандартных папок
         ArrayList<File> initialDirectories = new ArrayList<>();
@@ -108,26 +107,27 @@ public class MainActivity extends AppCompatActivity {
         initialDirectories.add(initialDirectory);
         singletonExample.initGitDirectory(initialDirectory);
 
-        for (File file:initialDirectories
-             ) {
-            if(!file.exists())
-            {
+        for (File file : initialDirectories
+        ) {
+            if (!file.exists()) {
                 file.mkdir();
             }
         }
 
     }
-    public void initToolbar()
-    {
+
+    public void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -142,10 +142,9 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-       return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
 
     }
-
 
 
 }

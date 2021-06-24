@@ -35,7 +35,7 @@ public class EditFilesActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(APP_TAG,"EditFiles OnCreate");
+        Log.i(APP_TAG, "EditFiles OnCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_files);
 
@@ -43,6 +43,7 @@ public class EditFilesActivity extends AppCompatActivity {
         initToolbar();
         pagerAdapter = new FilesPagerAdapter(this);
 
+        /*
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +52,8 @@ public class EditFilesActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        /*
+         */
         //File file = new File(filePath);
         //filePathUri = Uri.fromFile(file);
         //pagerAdapter.addPage(filePathUri);
@@ -58,9 +61,8 @@ public class EditFilesActivity extends AppCompatActivity {
         //pagerAdapter
     }
 
-    public void initToolbar()
-    {
-        EditFilesActivity currentActivity  = this;
+    public void initToolbar() {
+        EditFilesActivity currentActivity = this;
         Toolbar toolbar = findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
@@ -71,13 +73,14 @@ public class EditFilesActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(APP_TAG,"Нажата кнопка Back");
+                Log.i(APP_TAG, "Нажата кнопка Back");
 
                 pagerAdapter.saveFiles();
                 currentActivity.onBackPressed();
             }
         });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -93,33 +96,32 @@ public class EditFilesActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        /*
         if (id == R.id.action_settings) {
             Log.i(APP_TAG, "Переход на активити с настройками");
             Intent intent = new Intent(EditFilesActivity.this, SettingsActivity.class);
             startActivity(intent);
-        }
-        if(id == R.id.action_open_file){
+        }*/
+        if (id == R.id.action_open_file) {
             //Нужно будет переделать, так как можно несколько раз открыть один и тот же файл,
             //нужно сохранить все открытые фрагменты
             pagerAdapter.saveFiles();
             onBackPressed();
         }
-        if(id == R.id.action_close_file){
+        if (id == R.id.action_close_file) {
             Log.i(APP_TAG, "Нажата кнопка Закрыть");
             pagerAdapter.closePage();
-            if(pagerAdapter.pages.size() == 0)
-            {
+            if (pagerAdapter.pages.size() == 0) {
                 onBackPressed();
             }
 
         }
-        if(id == R.id.action_view)
-        {
+        if (id == R.id.action_view) {
             //Открываем браузер для просмотра файла
             pagerAdapter.saveFiles();
-            Log.i(APP_TAG,"Current page path " + pagerAdapter.getCurrentPagePath());
+            Log.i(APP_TAG, "Current page path " + pagerAdapter.getCurrentPagePath());
             Intent intent = new Intent(EditFilesActivity.this, ViewerActivity.class);
-            intent.putExtra("path",pagerAdapter.getCurrentPagePath());
+            intent.putExtra("path", pagerAdapter.getCurrentPagePath());
             startActivity(intent);
 
         }
@@ -129,10 +131,9 @@ public class EditFilesActivity extends AppCompatActivity {
     }
 
 
-    private String parseUri(Uri uri)
-    {
+    private String parseUri(Uri uri) {
         String fileName = new File(uri.getPath()).getName();
-        Log.i(APP_TAG,fileName);
+        Log.i(APP_TAG, fileName);
         return fileName;
     }
 

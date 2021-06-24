@@ -33,26 +33,28 @@ public class LocalAddDialogFragment extends DialogFragment {
         fragment.currentPath = currentPath;
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL,android.R.style.ThemeOverlay_Material_ActionBar);
+        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.ThemeOverlay_Material_ActionBar);
         newFile = null;
         //setStyle(DialogFragment.STYLE_NORMAL, R.style.MY_DIALOG);
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         parentFragment = getParentFragment();
-        View root = inflater.inflate(R.layout.local_add_dialog,container,false);
+        View root = inflater.inflate(R.layout.local_add_dialog, container, false);
 
         Button cancelButton = root.findViewById(R.id.cancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Log.i(MODULE_TAG,"Отмена");
+                Log.i(MODULE_TAG, "Отмена");
                 getDialog().dismiss();
 
             }
@@ -63,7 +65,7 @@ public class LocalAddDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 //v.startAnimation(buttonClick);
-                Log.i(MODULE_TAG,"Нажатие на кнопку create Folder");
+                Log.i(MODULE_TAG, "Нажатие на кнопку create Folder");
                 createFileDialog(CREATE_FOLDER);
 
 
@@ -74,7 +76,7 @@ public class LocalAddDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
 
-                Log.i(MODULE_TAG,"Нажатие на кнопку create file");
+                Log.i(MODULE_TAG, "Нажатие на кнопку create file");
                 createFileDialog(CREATE_FILE);
             }
         });
@@ -82,17 +84,17 @@ public class LocalAddDialogFragment extends DialogFragment {
         return root;
 
     }
-    void createFileDialog(int action){
+
+    void createFileDialog(int action) {
 
         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
 
-        switch (action)
-        {
-            case CREATE_FOLDER:{
+        switch (action) {
+            case CREATE_FOLDER: {
                 alert.setTitle("Создать папку");
                 break;
             }
-            case CREATE_FILE:{
+            case CREATE_FILE: {
                 alert.setTitle("Создать файл");
                 break;
             }
@@ -106,12 +108,12 @@ public class LocalAddDialogFragment extends DialogFragment {
                 String path = currentPath;
                 //удалить всякие спецсимволы, типа точек, слешей и тд.
                 newFile = new File(path + "/" + fileName);
-                switch (action){
-                    case CREATE_FOLDER:{
+                switch (action) {
+                    case CREATE_FOLDER: {
                         newFile.mkdir();
                         break;
                     }
-                    case CREATE_FILE:{
+                    case CREATE_FILE: {
                         try {
                             newFile.createNewFile();
                         } catch (IOException exception) {
